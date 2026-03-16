@@ -1,66 +1,68 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import ListingCard from '@/components/ListingCard';
+import Button from '@/components/Button';
+import styles from './page.module.css';
+import { Listing } from '@/types';
 
-export default function Home() {
+export const revalidate = 0;
+
+export default async function Home() {
+  const { data: listings, error } = await supabase
+    .from('listings')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(6);
+
+  const displayListings = (listings as Listing[]) || [];
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className={styles.home}>
+      {/* Hero Section */}
+      <section className={styles.hero}>
+        <div className={`container ${styles.heroContainer}`}>
+          <h1 className={styles.heroTitle}>Kupujte a prodávejte podíly nemovitostí</h1>
+          <p className={styles.heroSubtitle}>
+            První prémiové tržiště specializované výhradně na spoluvlastnické podíly. 
+            Spojujeme majitele s investory jednoduše a bezpečně.
           </p>
+          <div className={styles.heroActions}>
+            <Link href="/add">
+              <Button>Přidat inzerát</Button>
+            </Link>
+            <Link href="/listings">
+              <Button variant="outline">Prohlížet nabídky</Button>
+            </Link>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Featured Section */}
+      <section className={`container ${styles.feedSection}`}>
+        <div className={styles.feedHeader}>
+          <h2 className={styles.sectionTitle}>Nejnovější nabídky</h2>
+          <Link href="/listings" className={styles.viewAll}>
+            Zobrazit vše &rarr;
+          </Link>
         </div>
-      </main>
+        
+        {displayListings.length > 0 ? (
+          <div className={styles.grid}>
+            {displayListings.map(listing => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.emptyState}>
+            <p>Zatím zde nejsou žádné inzeráty. Buďte první!</p>
+            {error && (
+              <p className={styles.errorText}>
+                (Tip pro vývojáře: Ujistěte se, že jste spustili SQL skript v Supabase.)
+              </p>
+            )}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

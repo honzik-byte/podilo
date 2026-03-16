@@ -1,0 +1,77 @@
+.filterForm {
+  background: var(--background);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 3rem;
+}
+
+.filtersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .filtersWrapper {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+}
+
+.filterGroup {
+  flex: 1;
+  min-width: 200px;
+}
+
+.priceGroupWrapper {
+  display: flex;
+  gap: 1rem;
+  flex: 2;
+  min-width: 250px;
+}
+
+.label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-text);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.actionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 150px;
+}
+
+.applyBtn {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .applyBtn {
+    width: auto;
+  }
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: var(--muted-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.clearBtn:hover {
+  color: #dc2626;
+}
