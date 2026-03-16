@@ -1,10 +1,8 @@
 import { supabase } from '@/lib/supabase';
-import ListingCard from '@/components/ListingCard';
-import ListingsFilter from './ListingsFilter';
 import styles from './page.module.css';
 import { Listing } from '@/types';
-import dynamic from 'next/dynamic';
 import ListingsClientView from './ListingsClientView';
+import { mergeWithLocalListings } from '@/lib/localListings';
 
 export const revalidate = 0;
 
@@ -14,59 +12,39 @@ interface PageProps {
 
 export default async function ListingsPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
-  const locationFilter = typeof resolvedParams.location === 'string' ? resolvedParams.location : '';
-  const typeFilter = typeof resolvedParams.type === 'string' ? resolvedParams.type : '';
-  const minPriceFilter = typeof resolvedParams.minPrice === 'string' ? Number(resolvedParams.minPrice) : 0;
-  const maxPriceFilter = typeof resolvedParams.maxPrice === 'string' ? Number(resolvedParams.maxPrice) : 0;
-
-  let query = supabase
+  const { data: listings, error } = await supabase
     .from('listings')
     .select('*')
+    .order('is_top', { ascending: false })
+    .order('is_highlighted', { ascending: false })
     .order('created_at', { ascending: false });
 
-  if (locationFilter) {
-    query = query.ilike('location', `%${locationFilter}%`);
-  }
-  
-  if (typeFilter) {
-    query = query.eq('property_type', typeFilter);
-  }
-
-  if (minPriceFilter > 0) {
-    query = query.gte('price', minPriceFilter);
-  }
-
-  if (maxPriceFilter > 0) {
-    query = query.lte('price', maxPriceFilter);
-  }
-
-  const { data: listings, error } = await query;
-
-  const displayListings = (listings as Listing[]) || [];
+  const displayListings = await mergeWithLocalListings((listings as Listing[]) || []);
 
   return (
-    <div className="container">
+    <div className={`container ${styles.page}`}>
       <div className={styles.header}>
         <div className={styles.headerTop}>
           <div>
-            <h1 className={styles.title}>Všechny nabídky</h1>
+            <p className={styles.eyebrow}>Investor marketplace</p>
+            <h1 className={styles.title}>Nabídky spoluvlastnických podílů</h1>
             <p className={styles.subtitle}>
-              Procházejte aktuálně dostupné spoluvlastnické podíly nemovitostí.
+              Porovnejte cenu za nabízený podíl, odhad hodnoty celé nemovitosti i charakter příležitosti na jednom místě.
             </p>
+          </div>
+
+          <div className={styles.headerNote}>
+            <strong>{displayListings.length}</strong>
+            <span>aktivních nabídek</span>
           </div>
         </div>
       </div>
 
-      <ListingsFilter />
-
-      {displayListings.length > 0 ? (
-        <ListingsClientView listings={displayListings} />
-      ) : (
-        <div className={styles.emptyState}>
-          <p>Zatím zde nejsou žádné inzeráty odpovídající filtrům.</p>
-          {error && <p className={styles.errorText}>Došlo k chybě při načítání.</p>}
-        </div>
-      )}
+      <ListingsClientView
+        listings={displayListings}
+        initialSearchParams={resolvedParams}
+        hasError={Boolean(error)}
+      />
     </div>
   );
 }

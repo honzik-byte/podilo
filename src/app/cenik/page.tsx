@@ -1,4 +1,5 @@
 import styles from './page.module.css';
+import Link from 'next/link';
 
 export default function PricingPage() {
   return (
@@ -18,7 +19,7 @@ export default function PricingPage() {
             <div className={styles.price}>199 Kč<span> / 7 dní</span></div>
           </div>
           <div className={styles.cardBody}>
-            <p>TOP inzeráty jsou zobrazeny na předních pozicích ve výpisu nabídek a jsou označeny štítkem "TOP".</p>
+            <p>TOP inzeráty jsou zobrazeny na předních pozicích ve výpisu nabídek a jsou označeny štítkem &quot;TOP&quot;.</p>
           </div>
         </div>
 
@@ -49,6 +50,9 @@ export default function PricingPage() {
       <div className={styles.disclaimerBox}>
         <p className={styles.disclaimerText}>
           Podilo je inzertní platforma, která umožňuje uživatelům zveřejňovat nabídky spoluvlastnických podílů na nemovitostech. Platforma nezprostředkovává samotné transakce mezi uživateli.
+        </p>
+        <p className={styles.linkLine}>
+          Pro aktivní kupující připravujeme také plán <Link href="/premium">Investor Pro</Link>.
         </p>
       </div>
     </div>

@@ -1,25 +1,68 @@
+.page {
+  padding-bottom: 5rem;
+}
+
 .header {
-  padding: 4rem 0 3rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 3rem;
+  padding: 4.5rem 0 2.25rem;
 }
 
 .headerTop {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  gap: 2rem;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fc 100%);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.05);
+}
+
+.eyebrow {
+  margin-bottom: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--muted-text);
+  font-weight: 800;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
   font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.8rem;
 }
 
 .subtitle {
   color: var(--muted-text);
-  font-size: 1.1rem;
+  font-size: 1.08rem;
+  max-width: 60ch;
+  line-height: 1.7;
+}
+
+.headerNote {
+  flex-shrink: 0;
+  display: grid;
+  gap: 0.1rem;
+  min-width: 10rem;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+}
+
+.headerNote strong {
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.headerNote span {
+  color: var(--muted-text);
+  font-size: 0.95rem;
 }
 
 .grid {
@@ -44,8 +87,8 @@
 .emptyState {
   text-align: center;
   padding: 4rem 2rem;
-  background: var(--muted);
-  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+  border-radius: 1.5rem;
   border: 1px dashed var(--border);
   color: var(--muted-text);
 }
@@ -59,10 +102,12 @@
 .viewToggle {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 2rem;
   padding: 0.25rem;
-  background: var(--muted);
-  border-radius: var(--radius);
+  background: #f4f4f6;
+  border-radius: 999px;
   width: fit-content;
   border: 1px solid var(--border);
 }
@@ -90,6 +135,13 @@
   border: 1px solid var(--border);
 }
 
+.resultCount {
+  padding: 0 0.9rem;
+  color: var(--muted-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
 .mapLoading {
   height: 500px;
   width: 100%;
@@ -101,4 +153,27 @@
   background: var(--muted);
   color: var(--muted-text);
   margin-bottom: 3rem;
+}
+
+@media (max-width: 860px) {
+  .headerTop {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5rem;
+  }
+
+  .headerNote {
+    min-width: 0;
+  }
+
+  .viewToggle {
+    width: 100%;
+    border-radius: 1rem;
+    padding: 0.5rem;
+  }
+
+  .resultCount {
+    width: 100%;
+    padding: 0.35rem 0.5rem 0;
+  }
 }

@@ -1,0 +1,45 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(228, 228, 231, 0.9);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  border-color: #d4d4d8;
+  box-shadow: var(--shadow-md);
+}
+
+.overlay {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  padding: 0.55rem 0.75rem;
+}
+
+.inline {
+  padding: 0.7rem 1rem;
+}
+
+.active {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.label {
+  font-size: 0.82rem;
+  font-weight: 700;
+}

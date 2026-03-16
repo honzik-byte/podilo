@@ -1,24 +1,41 @@
 .filterForm {
-  background: var(--background);
+  background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
   padding: 1.5rem;
-  border-radius: var(--radius);
+  border-radius: 1.5rem;
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.05);
   margin-bottom: 3rem;
 }
 
-.filtersWrapper {
+.headerRow {
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
 }
 
-@media (min-width: 768px) {
-  .filtersWrapper {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-end;
-  }
+.eyebrow {
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  color: var(--muted-text);
+  font-weight: 800;
+}
+
+.title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .filterGroup {
@@ -26,11 +43,11 @@
   min-width: 200px;
 }
 
-.priceGroupWrapper {
+.priceGroup {
   display: flex;
   gap: 1rem;
   flex: 2;
-  min-width: 250px;
+  min-width: 260px;
 }
 
 .label {
@@ -43,35 +60,73 @@
   letter-spacing: 0.05em;
 }
 
+.checkboxGrid {
+  display: grid;
+  gap: 0.85rem;
+  min-width: 220px;
+  align-content: start;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.checkbox input {
+  width: 1rem;
+  height: 1rem;
+}
+
 .actionsGroup {
   display: flex;
   align-items: center;
   gap: 1rem;
   min-width: 150px;
-}
-
-.applyBtn {
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .applyBtn {
-    width: auto;
-  }
+  padding-top: 0.5rem;
+  border-top: 1px solid #efeff2;
 }
 
 .clearBtn {
-  background: none;
-  border: none;
-  color: var(--muted-text);
-  font-size: 0.85rem;
-  font-weight: 500;
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 0.88rem;
+  font-weight: 700;
   cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  transition: color 0.2s;
+  border-radius: 999px;
+  min-height: 2.7rem;
+  padding: 0 1rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 .clearBtn:hover {
-  color: #dc2626;
+  transform: translateY(-1px);
+  border-color: #d4d4d8;
+}
+
+.helperText {
+  color: var(--muted-text);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 767px) {
+  .headerRow,
+  .actionsGroup,
+  .priceGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .checkboxGrid {
+    min-width: 0;
+  }
 }

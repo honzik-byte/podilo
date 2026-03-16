@@ -2,32 +2,36 @@
   border-top: 1px solid var(--border);
   padding: 4rem 0 2rem;
   margin-top: 5rem;
-  background: var(--muted);
+  background: linear-gradient(180deg, #f8f9fb 0%, #f3f4f6 100%);
 }
 
 .content {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2.5rem;
-  margin-bottom: 3rem;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 @media (min-width: 768px) {
   .content {
     grid-template-columns: 2fr 1fr 1fr;
-    gap: 4rem;
+    gap: 3rem;
   }
 }
 
 .brandColumn {
   display: flex;
   flex-direction: column;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(228, 228, 231, 0.8);
 }
 
 .title {
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 1.25rem;
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin-bottom: 1.1rem;
   color: var(--foreground);
 }
 
@@ -38,13 +42,12 @@
 }
 
 .linkList li {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.7rem;
 }
 
 .link {
   color: var(--muted-text);
-  text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
   font-size: 0.95rem;
 }
 
@@ -55,8 +58,8 @@
 .text {
   color: var(--muted-text);
   font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  margin-bottom: 0.9rem;
 }
 
 .text strong {
@@ -64,17 +67,17 @@
 }
 
 .disclaimer {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(228, 228, 231, 0.8);
   padding-top: 2rem;
   text-align: center;
 }
 
 .disclaimerText {
   color: var(--muted-text);
-  font-size: 0.85rem;
-  line-height: 1.6;
+  font-size: 0.88rem;
+  line-height: 1.7;
   max-width: 800px;
-  margin: 0 auto 1rem;
+  margin: 0 auto 0.9rem;
 }
 
 .copyright {

@@ -20,7 +20,7 @@ export default function FAQPage() {
         <div className={styles.faqItem}>
           <div className={styles.faqQuestion}>Jak přidám inzerát?</div>
           <div className={styles.faqAnswer}>
-            Stačí se zaregistrovat pomocí emailu, přihlásit se a kliknout na tlačítko "Přidat inzerát". 
+            Stačí se zaregistrovat pomocí emailu, přihlásit se a kliknout na tlačítko &quot;Přidat inzerát&quot;.
             Vyplníte jednoduchý formulář, nahrajete fotky, zadáte cenu a vaši nabídku ihned zveřejníme.
           </div>
         </div>
@@ -50,9 +50,16 @@ export default function FAQPage() {
           </div>
         </div>
 
+        <div className={styles.faqItem}>
+          <div className={styles.faqQuestion}>Proč se vyplatí registrace?</div>
+          <div className={styles.faqAnswer}>
+            Registrovaní uživatelé si mohou ukládat nabídky, zobrazit telefonní číslo prodávajícího a spravovat vlastní inzeráty. Postupně přidáváme i další funkce pro aktivní investory.
+          </div>
+        </div>
+
         <div className={styles.disclaimerBox} style={{ marginTop: '3rem' }}>
           <p className={styles.disclaimerText}>
-            Nenašli jste odpověď na svůj dotaz? Napište nám na podporu přes <Link href="/contact" style={{ color: 'inherit', fontWeight: 'bold' }}>kontaktní formulář</Link>.
+            Nenašli jste odpověď na svůj dotaz? Napište nám na podporu přes <Link href="/contact" style={{ color: 'inherit', fontWeight: 'bold' }}>kontaktní formulář</Link> nebo si projděte <Link href="/poradna" style={{ color: 'inherit', fontWeight: 'bold' }}>Poradnu</Link>.
           </p>
         </div>
       </div>

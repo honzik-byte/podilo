@@ -23,6 +23,8 @@ export default function Footer() {
             <ul className={styles.linkList}>
               <li><Link href="/about" className={styles.link}>Co je Podilo?</Link></li>
               <li><Link href="/how-it-works" className={styles.link}>Jak to funguje</Link></li>
+              <li><Link href="/poradna" className={styles.link}>Poradna</Link></li>
+              <li><Link href="/premium" className={styles.link}>Investor Pro</Link></li>
               <li><Link href="/cenik" className={styles.link}>Ceník zvýšení viditelnosti</Link></li>
               <li><Link href="/faq" className={styles.link}>Často kladené dotazy (FAQ)</Link></li>
               <li><Link href="/contact" className={styles.link}>Kontakt a podpora</Link></li>
@@ -30,8 +32,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <div className={styles.title}>Právní informace</div>
+            <div className={styles.title}>Uživatel</div>
             <ul className={styles.linkList}>
+              <li><Link href="/saved" className={styles.link}>Uložené nabídky</Link></li>
+              <li><Link href="/my-listings" className={styles.link}>Moje inzeráty</Link></li>
               <li><Link href="/terms" className={styles.link}>Obchodní podmínky</Link></li>
               <li><Link href="/privacy" className={styles.link}>Ochrana osobních údajů</Link></li>
             </ul>

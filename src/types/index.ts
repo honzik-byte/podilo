@@ -16,5 +16,6 @@ export interface Listing {
   lng?: number | null;
   is_top: boolean;
   is_highlighted: boolean;
+  user_id?: string | null;
   created_at: string;
 }

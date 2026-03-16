@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Link from 'next/link';
+import WhyRegisterCard from '@/components/WhyRegisterCard';
+import styles from '../auth.module.css';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,47 +35,58 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container" style={{ maxWidth: '500px', padding: '5rem 1.5rem' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem', fontWeight: 800 }}>Přihlášení</h1>
-      <p style={{ color: 'var(--muted-text)', marginBottom: '2rem' }}>Vítejte zpět na Podilo.</p>
-
-      <form onSubmit={handleLogin} style={{ background: 'var(--muted)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
-        {error && (
-          <div style={{ backgroundColor: '#fee2e2', color: '#991b1b', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-            {error}
+    <div className={styles.page}>
+      <div className={styles.layout}>
+        <div className={styles.intro}>
+          <p className={styles.eyebrow}>Přihlášení</p>
+          <h1 className={styles.title}>Vraťte se ke svým uloženým nabídkám a kontaktům</h1>
+          <p className={styles.subtitle}>
+            Přihlášený účet vám zpřístupní uložené nabídky, telefonní čísla na prodávající a správu vlastních inzerátů.
+          </p>
+          <ul className={styles.bulletList}>
+            <li>Uložené nabídky a budoucí watchlist</li>
+            <li>Telefonní kontakt na prodávajícího</li>
+            <li>Správa vlastních inzerátů na jednom místě</li>
+          </ul>
+          <div style={{ marginTop: '1.5rem' }}>
+            <WhyRegisterCard compact title="Ještě účet nemáte?" />
           </div>
-        )}
-
-        <div className="form-group">
-          <label className="label">E-mail</label>
-          <input 
-            type="email" 
-            className="input" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
         </div>
 
-        <div className="form-group">
-          <label className="label">Heslo</label>
-          <input 
-            type="password" 
-            className="input" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-        </div>
+        <form onSubmit={handleLogin} className={styles.formCard}>
+          {error && <div className={styles.error}>{error}</div>}
 
-        <Button fullWidth type="submit" disabled={loading}>
-          {loading ? 'Přihlašuji...' : 'Přihlásit se'}
-        </Button>
+          <div className="form-group">
+            <label className="label">E-mail</label>
+            <input
+              type="email"
+              className="input"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
 
-        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem' }}>
-          Nemáte účet? <Link href="/register" style={{ color: 'var(--accent-text)', fontWeight: 600 }}>Zaregistrujte se</Link>
-        </div>
-      </form>
+          <div className="form-group">
+            <label className="label">Heslo</label>
+            <input
+              type="password"
+              className="input"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
+
+          <Button fullWidth type="submit" disabled={loading}>
+            {loading ? 'Přihlašuji...' : 'Přihlásit se'}
+          </Button>
+
+          <div className={styles.footerText}>
+            Nemáte účet? <Link href="/register">Zaregistrujte se</Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { Listing } from '@/types';
 import styles from './page.module.css';
 import DeleteButton from './DeleteButton';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -14,44 +15,41 @@ export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    checkAdminAccess();
-  }, []);
+    const init = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
 
-  const checkAdminAccess = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      router.push('/login');
-      return;
-    }
+      if (!session) {
+        router.push('/login');
+        return;
+      }
 
-    const { data: roleData, error: roleError } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', session.user.id)
-      .single();
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .single();
 
-    if (roleError || !roleData || roleData.role !== 'admin') {
-      setIsAdmin(false);
+      if (roleError || !roleData || roleData.role !== 'admin') {
+        setIsAdmin(false);
+        setLoading(false);
+        return;
+      }
+
+      const { data } = await supabase
+        .from('listings')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      const localResponse = await fetch('/api/local-listings');
+      const localListings = localResponse.ok ? ((await localResponse.json()) as Listing[]) : [];
+
+      setIsAdmin(true);
+      setDisplayListings([...(data as Listing[] || []), ...localListings]);
       setLoading(false);
-      return;
-    }
+    };
 
-    setIsAdmin(true);
-    fetchListings();
-  };
-
-  const fetchListings = async () => {
-    const { data, error } = await supabase
-      .from('listings')
-      .select('*')
-      .order('created_at', { ascending: false });
-      
-    if (data) {
-      setDisplayListings(data as Listing[]);
-    }
-    setLoading(false);
-  };
+    void init();
+  }, [router]);
 
   if (loading) {
     return <div className="container" style={{ padding: '5rem 0', textAlign: 'center' }}>Načítám...</div>;
@@ -92,7 +90,12 @@ export default function AdminDashboard() {
                 <td>{listing.contact_email}</td>
                 <td>{listing.price.toLocaleString('cs-CZ')} Kč</td>
                 <td>
-                  <DeleteButton listingId={listing.id} />
+                  <div className={styles.actions}>
+                    <Link href={`/admin/edit/${listing.id}`} className={styles.editLink}>
+                      Upravit
+                    </Link>
+                    <DeleteButton listingId={listing.id} />
+                  </div>
                 </td>
               </tr>
             ))}

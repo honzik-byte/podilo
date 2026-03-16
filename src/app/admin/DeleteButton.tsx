@@ -13,6 +13,21 @@ export default function DeleteButton({ listingId }: { listingId: string }) {
     if (!confirm('Opravdu chcete tento inzerát smazat? Tato akce je nevratná.')) return;
 
     setLoading(true);
+
+    if (listingId.startsWith('local-')) {
+      const response = await fetch(`/api/local-listings/${listingId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        alert('Chyba při mazání lokálního inzerátu.');
+      } else {
+        router.refresh();
+      }
+
+      setLoading(false);
+      return;
+    }
     
     // First, try to fetch images to delete from storage as well
     const { data: listingData } = await supabase

@@ -1,0 +1,105 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at top right, rgba(226, 232, 240, 0.8), transparent 35%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(249, 250, 251, 0.98) 100%);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ececf1;
+  color: var(--muted-text);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.dots {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  border: 0;
+  background: #d4d4d8;
+  cursor: pointer;
+}
+
+.dotActive {
+  background: #111827;
+}
+
+.quoteMark {
+  position: absolute;
+  top: 3.2rem;
+  right: 1.4rem;
+  font-size: 5rem;
+  line-height: 1;
+  color: rgba(17, 24, 39, 0.06);
+  font-weight: 800;
+}
+
+.quote {
+  position: relative;
+  font-size: 1.04rem;
+  line-height: 1.85;
+  color: #27272a;
+  margin-bottom: 1.4rem;
+  min-height: 9.5rem;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: #111827;
+  color: #fff;
+  font-weight: 800;
+}
+
+.author {
+  display: block;
+  font-size: 0.98rem;
+}
+
+.role {
+  display: block;
+  color: var(--muted-text);
+  font-size: 0.88rem;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 720px) {
+  .quote {
+    min-height: 0;
+  }
+}
