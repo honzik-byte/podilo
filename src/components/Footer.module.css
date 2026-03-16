@@ -1,39 +1,84 @@
 .footer {
   border-top: 1px solid var(--border);
-  padding: 3rem 0;
+  padding: 4rem 0 2rem;
   margin-top: 5rem;
   background: var(--muted);
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: center;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
 }
 
 @media (min-width: 768px) {
   .content {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    text-align: left;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
   }
+}
+
+.brandColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+  color: var(--foreground);
+}
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.linkList li {
+  margin-bottom: 0.75rem;
+}
+
+.link {
+  color: var(--muted-text);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: 0.95rem;
+}
+
+.link:hover {
+  color: var(--foreground);
 }
 
 .text {
   color: var(--muted-text);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   line-height: 1.6;
+  margin-bottom: 0.75rem;
 }
 
-.ownerInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.ownerInfo strong {
+.text strong {
   color: var(--foreground);
+}
+
+.disclaimer {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.disclaimerText {
+  color: var(--muted-text);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto 1rem;
+}
+
+.copyright {
+  color: var(--muted-text);
+  font-size: 0.85rem;
+  opacity: 0.8;
 }
