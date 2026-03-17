@@ -44,7 +44,6 @@ export async function activatePromotionFromSession(session: Stripe.Checkout.Sess
     is_highlighted: plan.apply.is_highlighted,
     top_until: plan.apply.is_top ? expiresAtIso : null,
     highlighted_until: plan.apply.is_highlighted ? expiresAtIso : null,
-    updated_at: activatedAt.toISOString(),
   };
 
   const { error: updateError } = await adminClient

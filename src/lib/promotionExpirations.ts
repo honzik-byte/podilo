@@ -49,22 +49,35 @@ export async function syncExpiredPromotions() {
       continue;
     }
 
-    const resetPayload: Record<string, boolean | string> = {
-      updated_at: new Date().toISOString(),
-    };
+    const resetPayload: Record<string, boolean | null> = {};
 
     if (plan.apply.is_top) {
       resetPayload.is_top = false;
+      resetPayload.top_until = null;
     }
 
     if (plan.apply.is_highlighted) {
       resetPayload.is_highlighted = false;
+      resetPayload.highlighted_until = null;
     }
 
-    await adminClient
+    const { error } = await adminClient
       .from('listings')
       .update(resetPayload)
       .eq('id', record.listingId);
+
+    if (error) {
+      console.error('[StripePromotion] Promotion expiry reset failed', {
+        listingId: record.listingId,
+        resetPayload,
+        error,
+      });
+    } else {
+      console.info('[StripePromotion] Promotion expired and reset', {
+        listingId: record.listingId,
+        resetPayload,
+      });
+    }
   }
 
   const activeRecords = records.filter((record) => new Date(record.expiresAt).getTime() > now);
