@@ -3,8 +3,8 @@ import { articles } from '@/lib/articleContent';
 import styles from './page.module.css';
 
 export const metadata = {
-  title: 'Poradna - Podilo',
-  description: 'Praktické články o prodeji, koupi a investování do spoluvlastnických podílů nemovitostí.',
+  title: 'Poradna o spoluvlastnických podílech | Podilo',
+  description: 'Praktické články o prodeji, koupi a investování do spoluvlastnických podílů nemovitostí. Vysvětlení trhu, cen i právního kontextu.',
 };
 
 export default function ContentHubPage() {

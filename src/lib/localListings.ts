@@ -4,6 +4,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { Listing } from '@/types';
 import { ListingDetails, serializeListingDescription } from '@/lib/listingMetadata';
+import { sortListings } from '@/lib/listingSort';
 
 export interface LocalListingRecord extends Omit<Listing, 'description'> {
   descriptionText: string;
@@ -47,11 +48,15 @@ export async function getLocalListingRecordById(id: string) {
 export async function upsertLocalListing(record: LocalListingRecord) {
   const records = await readLocalListingRecords();
   const index = records.findIndex((item) => item.id === record.id);
+  const nextRecord = {
+    ...record,
+    updated_at: new Date().toISOString(),
+  };
 
   if (index === -1) {
-    records.push(record);
+    records.push(nextRecord);
   } else {
-    records[index] = record;
+    records[index] = nextRecord;
   }
 
   await writeLocalListingRecords(records);
@@ -66,7 +71,10 @@ export async function deleteLocalListing(id: string) {
 export async function mergeWithLocalListings(listings: Listing[] = [], minCount = 10) {
   const localListings = await getLocalListings();
   const existingIds = new Set(listings.map((listing) => listing.id));
-  const merged = [...listings, ...localListings.filter((listing) => !existingIds.has(listing.id))];
+  const merged = sortListings([
+    ...listings,
+    ...localListings.filter((listing) => !existingIds.has(listing.id)),
+  ]);
 
   if (merged.length >= minCount) {
     return merged;

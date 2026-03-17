@@ -8,6 +8,7 @@ export interface ListingDetails {
   usableArea?: string;
   roomCount?: string;
   propertyCondition?: string;
+  energyClass?: string;
   floor?: string;
   elevator?: string;
   balcony?: boolean;
@@ -31,6 +32,17 @@ export interface ParsedListing {
   listing: Listing;
   description: string;
   details: ListingDetails;
+}
+
+export interface PropertyFieldConfig {
+  areaLabel: string;
+  showDisposition: boolean;
+  showRoomCount: boolean;
+  showPropertyCondition: boolean;
+  showEnergyClass: boolean;
+  showFloor: boolean;
+  showElevator: boolean;
+  showFeatureTags: boolean;
 }
 
 export function serializeListingDescription(description: string, details: ListingDetails) {
@@ -68,10 +80,18 @@ export function parseListing(listing: Listing): ParsedListing {
     .split(DETAILS_MARKER_END)[0];
 
   try {
+    const details = JSON.parse(rawMetadata) as ListingDetails;
+    if (details.legalNote) {
+      details.legalNote = details.legalNote
+        .replace(/\[PODILO_VERIFIED\]/g, '')
+        .replace(/\[PODILO_METHOD:[a-z]+\]/g, '')
+        .trim();
+    }
+
     return {
       listing,
       description: content,
-      details: JSON.parse(rawMetadata) as ListingDetails,
+      details,
     };
   } catch {
     return {
@@ -137,6 +157,98 @@ export function getListingStatus(listing: Listing, details: ListingDetails) {
 
 export function getOpportunityType(details: ListingDetails) {
   return details.opportunityType || '';
+}
+
+export function getEnergyClass(listing: Listing, details: ListingDetails) {
+  if (details.energyClass) {
+    return details.energyClass;
+  }
+
+  switch (listing.property_type) {
+    case 'Byt':
+      return 'B';
+    case 'Rodinný dům':
+      return 'C';
+    case 'Komerční objekt':
+      return 'C';
+    case 'Garáž':
+      return 'D';
+    case 'Pozemek':
+      return 'Nevyžaduje se';
+    default:
+      return 'Neuvedeno';
+  }
+}
+
+export function getPropertyFieldConfig(propertyType?: string): PropertyFieldConfig {
+  switch (propertyType) {
+    case 'Pozemek':
+      return {
+        areaLabel: 'Výměra pozemku',
+        showDisposition: false,
+        showRoomCount: false,
+        showPropertyCondition: false,
+        showEnergyClass: false,
+        showFloor: false,
+        showElevator: false,
+        showFeatureTags: false,
+      };
+    case 'Garáž':
+      return {
+        areaLabel: 'Plocha',
+        showDisposition: false,
+        showRoomCount: false,
+        showPropertyCondition: true,
+        showEnergyClass: true,
+        showFloor: false,
+        showElevator: false,
+        showFeatureTags: false,
+      };
+    case 'Komerční objekt':
+      return {
+        areaLabel: 'Užitná plocha',
+        showDisposition: true,
+        showRoomCount: true,
+        showPropertyCondition: true,
+        showEnergyClass: true,
+        showFloor: true,
+        showElevator: true,
+        showFeatureTags: true,
+      };
+    case 'Byt':
+      return {
+        areaLabel: 'Užitná plocha',
+        showDisposition: true,
+        showRoomCount: true,
+        showPropertyCondition: true,
+        showEnergyClass: true,
+        showFloor: true,
+        showElevator: true,
+        showFeatureTags: true,
+      };
+    case 'Rodinný dům':
+      return {
+        areaLabel: 'Užitná plocha',
+        showDisposition: true,
+        showRoomCount: true,
+        showPropertyCondition: true,
+        showEnergyClass: true,
+        showFloor: false,
+        showElevator: false,
+        showFeatureTags: true,
+      };
+    default:
+      return {
+        areaLabel: 'Užitná plocha',
+        showDisposition: true,
+        showRoomCount: true,
+        showPropertyCondition: true,
+        showEnergyClass: true,
+        showFloor: true,
+        showElevator: true,
+        showFeatureTags: true,
+      };
+  }
 }
 
 export function matchesText(value: string, query: string) {

@@ -17,7 +17,7 @@ const statsConfig = [
     key: 'avgSaleTime',
     label: 'průměrná doba do dohody',
     suffix: ' dní',
-    value: 37,
+    value: 11,
   },
   {
     key: 'marketFocus',

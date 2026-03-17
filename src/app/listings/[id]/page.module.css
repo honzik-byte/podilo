@@ -29,10 +29,17 @@
   align-content: start;
 }
 
+.sidebar {
+  position: sticky;
+  top: 6.5rem;
+  height: fit-content;
+}
+
 .heroCard,
 .section,
 .priceCard,
-.contactCard {
+.contactCard,
+.metaCard {
   border: 1px solid var(--border);
   border-radius: 1.5rem;
   background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
@@ -191,6 +198,12 @@
   margin-top: 1rem;
 }
 
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
 .description {
   display: grid;
   gap: 1rem;
@@ -220,7 +233,8 @@
 }
 
 .priceCard,
-.contactCard {
+.contactCard,
+.metaCard {
   padding: 1.5rem;
 }
 
@@ -277,6 +291,59 @@
   margin-bottom: 1.25rem;
 }
 
+.metaCard {
+  display: grid;
+  gap: 1rem;
+}
+
+.metaList {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.metaList > div {
+  display: grid;
+  gap: 0.25rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid #efeff2;
+}
+
+.metaList > div:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.qualityScore {
+  display: grid;
+  gap: 0.15rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.qualityScore strong {
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.qualityScore span {
+  color: var(--muted-text);
+}
+
+.qualityList {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.qualityItem {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  color: #27272a;
+}
+
 .phoneBox {
   margin-bottom: 1.25rem;
   padding: 1.1rem;
@@ -324,13 +391,18 @@
   .layout {
     grid-template-columns: 1fr;
   }
+
+  .sidebar {
+    position: static;
+  }
 }
 
 @media (max-width: 720px) {
   .heroCard,
   .section,
   .priceCard,
-  .contactCard {
+  .contactCard,
+  .metaCard {
     padding: 1.15rem;
   }
 
@@ -339,6 +411,10 @@
   }
 
   .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .relatedGrid {
     grid-template-columns: 1fr;
   }
 

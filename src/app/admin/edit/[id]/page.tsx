@@ -6,11 +6,15 @@ import { useRouter } from 'next/navigation';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { Listing } from '@/types';
-import { ListingDetails, parseListing, serializeListingDescription } from '@/lib/listingMetadata';
+import { getEnergyClass, getPropertyFieldConfig, ListingDetails, parseListing, serializeListingDescription } from '@/lib/listingMetadata';
+import { isValidListingPhone, isValidShareSize } from '@/lib/listingFormValidation';
+import { applyVerificationToDescription, getVerificationDetails } from '@/lib/listingVerification';
 import Button from '@/components/Button';
+import ListingImageManager from '@/components/ListingImageManager';
 import styles from './page.module.css';
 
 const propertyTypes = ['Byt', 'Rodinný dům', 'Pozemek', 'Komerční objekt', 'Garáž'];
+const supportEmail = 'podpora@podilo.cz';
 
 export default function AdminEditListingPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -21,6 +25,8 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [propertyType, setPropertyType] = useState('');
+  const fieldConfig = getPropertyFieldConfig(propertyType || listing?.property_type);
 
   useEffect(() => {
     const init = async () => {
@@ -35,22 +41,25 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
         return;
       }
 
+      const { data } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('id', id)
+        .single();
+
       const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', sessionData.session.user.id)
         .single();
 
-      if (!roleData || roleData.role !== 'admin') {
-        router.push('/admin');
+      const isOwner = Boolean(data && sessionData.session.user.id === (data as Listing).user_id);
+      const isAdmin = roleData?.role === 'admin';
+
+      if (!isAdmin && !isOwner) {
+        router.push('/my-listings');
         return;
       }
-
-      const { data } = await supabase
-        .from('listings')
-        .select('*')
-        .eq('id', id)
-        .single();
 
       if (!data) {
         const localResponse = await fetch(`/api/local-listings/${id}`);
@@ -63,6 +72,7 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
         const localListing = (await localResponse.json()) as Listing;
         const parsed = parseListing(localListing);
         setListing(localListing);
+        setPropertyType(localListing.property_type);
         setDetails(parsed.details);
         setDescription(parsed.description);
         setLoading(false);
@@ -71,6 +81,7 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
 
       const parsed = parseListing(data as Listing);
       setListing(data as Listing);
+      setPropertyType((data as Listing).property_type);
       setDetails(parsed.details);
       setDescription(parsed.description);
       setLoading(false);
@@ -89,11 +100,34 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
     setError('');
 
     const formData = new FormData(event.currentTarget);
+    const shareSize = String(formData.get('share_size') || '');
+    const price = Number(formData.get('price'));
+    const phone = String(formData.get('contact_phone') || '');
+
+    if (!isValidShareSize(shareSize)) {
+      setError('Velikost podílu musí být ve formátu 1/2, 1/3 nebo podobně.');
+      setSaving(false);
+      return;
+    }
+
+    if (!Number.isFinite(price) || price < 10000) {
+      setError('Cena za podíl musí být alespoň 10 000 Kč.');
+      setSaving(false);
+      return;
+    }
+
+    if (phone && !isValidListingPhone(phone)) {
+      setError('Telefon zadejte v platném formátu.');
+      setSaving(false);
+      return;
+    }
+
     const nextDetails: ListingDetails = {
       disposition: (formData.get('disposition') as string) || undefined,
       usableArea: (formData.get('usable_area') as string) || undefined,
       roomCount: (formData.get('room_count') as string) || undefined,
       propertyCondition: (formData.get('property_condition') as string) || undefined,
+      energyClass: (formData.get('energy_class') as string) || undefined,
       floor: (formData.get('floor') as string) || undefined,
       elevator: (formData.get('elevator') as string) || undefined,
       balcony: formData.get('balcony') === 'on',
@@ -118,22 +152,30 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
       location: formData.get('location') as string,
       street_address: formData.get('street_address') as string,
       property_type: formData.get('property_type') as string,
-      share_size: formData.get('share_size') as string,
-      price: Number(formData.get('price')),
+      share_size: shareSize,
+      price,
       full_property_value: formData.get('full_property_value')
         ? Number(formData.get('full_property_value'))
         : null,
       occupancy: (formData.get('occupancy') as string) || null,
-      description: serializeListingDescription((formData.get('description') as string) || '', nextDetails),
-      contact_email: formData.get('contact_email') as string,
-      contact_phone: (formData.get('contact_phone') as string) || null,
-      images: String(formData.get('images') || '')
-        .split('\n')
-        .map((item) => item.trim())
-        .filter(Boolean),
+      description: '',
+      contact_email: supportEmail,
+      contact_phone: phone || null,
+      images: JSON.parse(String(formData.get('images') || '[]')) as string[],
       is_top: formData.get('is_top') === 'on',
       is_highlighted: formData.get('is_highlighted') === 'on',
     };
+
+    const baseListing = {
+      ...listing,
+      description: serializeListingDescription((formData.get('description') as string) || '', nextDetails),
+    };
+
+    updatePayload.description = applyVerificationToDescription(
+      baseListing,
+      formData.get('verified_seller') === 'on',
+      (formData.get('verification_method') as 'telefon' | 'identita' | 'nic') || 'nic'
+    );
 
     if (listing.id.startsWith('local-')) {
       const localResponse = await fetch(`/api/local-listings/${listing.id}`, {
@@ -166,7 +208,11 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
       return;
     }
 
-    router.push('/admin');
+    if (session?.user?.id === listing.user_id) {
+      router.push('/my-listings');
+    } else {
+      router.push('/admin');
+    }
     router.refresh();
   };
 
@@ -182,13 +228,15 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
     );
   }
 
+  const verification = getVerificationDetails(listing);
+
   return (
     <div className={`container ${styles.page}`}>
       <div className={styles.header}>
         <div>
-          <Link href="/admin" className={styles.backLink}>← Zpět do administrace</Link>
+          <Link href={session?.user?.id === listing.user_id ? '/my-listings' : '/admin'} className={styles.backLink}>← Zpět</Link>
           <h1 className={styles.title}>Upravit inzerát</h1>
-          <p className={styles.subtitle}>Jako admin můžete upravit základní i rozšířená pole inzerátu.</p>
+          <p className={styles.subtitle}>Můžete upravit základní i rozšířená pole inzerátu včetně kontaktu a prezentace.</p>
         </div>
       </div>
 
@@ -202,7 +250,13 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
           </div>
           <div className="form-group">
             <label htmlFor="property_type" className="label">Typ nemovitosti</label>
-            <select id="property_type" name="property_type" className="select" defaultValue={listing.property_type}>
+            <select
+              id="property_type"
+              name="property_type"
+              className="select"
+              value={propertyType}
+              onChange={(event) => setPropertyType(event.target.value)}
+            >
               {propertyTypes.map((propertyType) => (
                 <option key={propertyType} value={propertyType}>{propertyType}</option>
               ))}
@@ -267,47 +321,84 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
         <div className={styles.sectionTitle}>Rozšířená pole</div>
 
         <div className={styles.grid}>
+          {fieldConfig.showDisposition && (
+            <div className="form-group">
+              <label htmlFor="disposition" className="label">Dispozice</label>
+              <input id="disposition" name="disposition" className="input" defaultValue={details.disposition || ''} />
+            </div>
+          )}
           <div className="form-group">
-            <label htmlFor="disposition" className="label">Dispozice</label>
-            <input id="disposition" name="disposition" className="input" defaultValue={details.disposition || ''} />
-          </div>
-          <div className="form-group">
-            <label htmlFor="usable_area" className="label">Užitná plocha</label>
+            <label htmlFor="usable_area" className="label">{fieldConfig.areaLabel}</label>
             <input id="usable_area" name="usable_area" className="input" defaultValue={details.usableArea || ''} />
           </div>
         </div>
 
         <div className={styles.grid}>
-          <div className="form-group">
-            <label htmlFor="room_count" className="label">Počet místností</label>
-            <input id="room_count" name="room_count" className="input" defaultValue={details.roomCount || ''} />
-          </div>
-          <div className="form-group">
-            <label htmlFor="property_condition" className="label">Stav nemovitosti</label>
-            <input id="property_condition" name="property_condition" className="input" defaultValue={details.propertyCondition || ''} />
-          </div>
+          {fieldConfig.showRoomCount && (
+            <div className="form-group">
+              <label htmlFor="room_count" className="label">Počet místností</label>
+              <input id="room_count" name="room_count" className="input" defaultValue={details.roomCount || ''} />
+            </div>
+          )}
+          {fieldConfig.showPropertyCondition && (
+            <div className="form-group">
+              <label htmlFor="property_condition" className="label">Stav nemovitosti</label>
+              <input id="property_condition" name="property_condition" className="input" defaultValue={details.propertyCondition || ''} />
+            </div>
+          )}
         </div>
 
         <div className={styles.grid}>
-          <div className="form-group">
-            <label htmlFor="floor" className="label">Patro</label>
-            <input id="floor" name="floor" className="input" defaultValue={details.floor || ''} />
-          </div>
-          <div className="form-group">
-            <label htmlFor="elevator" className="label">Výtah</label>
-            <select id="elevator" name="elevator" className="select" defaultValue={details.elevator || ''}>
-              <option value="">Neuvedeno</option>
-              <option value="Ano">Ano</option>
-              <option value="Ne">Ne</option>
-            </select>
-          </div>
+          {fieldConfig.showEnergyClass && (
+            <div className="form-group">
+              <label htmlFor="energy_class" className="label">Energetická třída</label>
+              <select
+                id="energy_class"
+                name="energy_class"
+                className="select"
+                defaultValue={details.energyClass || getEnergyClass(listing, details)}
+              >
+                <option value="">Neuvedeno</option>
+                <option value="A">A - mimořádně úsporná</option>
+                <option value="B">B - velmi úsporná</option>
+                <option value="C">C - úsporná</option>
+                <option value="D">D - méně úsporná</option>
+                <option value="E">E - nehospodárná</option>
+                <option value="F">F - velmi nehospodárná</option>
+                <option value="G">G - mimořádně nehospodárná</option>
+              </select>
+            </div>
+          )}
+          {fieldConfig.showFloor && (
+            <div className="form-group">
+              <label htmlFor="floor" className="label">Patro</label>
+              <input id="floor" name="floor" className="input" defaultValue={details.floor || ''} />
+            </div>
+          )}
+        </div>
+
+        <div className={styles.grid}>
+          {fieldConfig.showElevator && (
+            <div className="form-group">
+              <label htmlFor="elevator" className="label">Výtah</label>
+              <select id="elevator" name="elevator" className="select" defaultValue={details.elevator || ''}>
+                <option value="">Neuvedeno</option>
+                <option value="Ano">Ano</option>
+                <option value="Ne">Ne</option>
+              </select>
+            </div>
+          )}
         </div>
 
         <div className={styles.checks}>
-          <label><input type="checkbox" name="balcony" defaultChecked={Boolean(details.balcony)} /> Balkon</label>
-          <label><input type="checkbox" name="terrace" defaultChecked={Boolean(details.terrace)} /> Terasa</label>
-          <label><input type="checkbox" name="cellar" defaultChecked={Boolean(details.cellar)} /> Sklep</label>
-          <label><input type="checkbox" name="parking" defaultChecked={Boolean(details.parking)} /> Parkování</label>
+          {fieldConfig.showFeatureTags && (
+            <>
+              <label><input type="checkbox" name="balcony" defaultChecked={Boolean(details.balcony)} /> Balkon</label>
+              <label><input type="checkbox" name="terrace" defaultChecked={Boolean(details.terrace)} /> Terasa</label>
+              <label><input type="checkbox" name="cellar" defaultChecked={Boolean(details.cellar)} /> Sklep</label>
+              <label><input type="checkbox" name="parking" defaultChecked={Boolean(details.parking)} /> Parkování</label>
+            </>
+          )}
           <label><input type="checkbox" name="is_top" defaultChecked={listing.is_top} /> TOP nabídka</label>
           <label><input type="checkbox" name="is_highlighted" defaultChecked={listing.is_highlighted} /> Zvýrazněná</label>
         </div>
@@ -351,7 +442,24 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
           </div>
           <div className="form-group">
             <label htmlFor="contact_email" className="label">Kontaktní e-mail</label>
-            <input id="contact_email" name="contact_email" className="input" defaultValue={listing.contact_email} />
+            <input id="contact_email" name="contact_email" className="input" readOnly value={supportEmail} />
+          </div>
+        </div>
+
+        <div className={styles.grid}>
+          <div className="form-group">
+            <label htmlFor="verification_method" className="label">Metoda ověření inzerenta</label>
+            <select id="verification_method" name="verification_method" className="select" defaultValue={verification.method}>
+              <option value="nic">Bez ověření</option>
+              <option value="telefon">Ověření telefonem</option>
+              <option value="identita">Ověření identitou</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="label">Trust štítek</label>
+            <div className={styles.checks}>
+              <label><input type="checkbox" name="verified_seller" defaultChecked={verification.verified} /> Ověřený inzerent</label>
+            </div>
           </div>
         </div>
 
@@ -361,8 +469,8 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
             <input id="contact_phone" name="contact_phone" className="input" defaultValue={listing.contact_phone || ''} />
           </div>
           <div className="form-group">
-            <label htmlFor="images" className="label">URL fotografií</label>
-            <textarea id="images" name="images" className="textarea" defaultValue={(listing.images || []).join('\n')} />
+            <label className="label">Fotografie</label>
+            <ListingImageManager inputName="images" initialImages={listing.images || []} />
           </div>
         </div>
 

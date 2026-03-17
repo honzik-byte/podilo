@@ -5,9 +5,11 @@ import FavoriteButton from '@/components/FavoriteButton';
 import {
   formatPrice,
   getDiscountLabel,
+  getEnergyClass,
   getOpportunityType,
   parseListing,
 } from '@/lib/listingMetadata';
+import { getVerificationDetails } from '@/lib/listingVerification';
 import styles from './ListingCard.module.css';
 
 interface ListingCardProps {
@@ -19,6 +21,8 @@ export default function ListingCard({ listing }: ListingCardProps) {
   const parsed = parseListing(listing);
   const priceInsight = getDiscountLabel(listing);
   const opportunityType = getOpportunityType(parsed.details);
+  const energyClass = getEnergyClass(listing, parsed.details);
+  const verification = getVerificationDetails(listing);
 
   return (
     <article className={styles.card}>
@@ -39,6 +43,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
         <div className={styles.badges}>
           {listing.is_top && <span className={styles.topBadge}>TOP nabídka</span>}
           {listing.is_highlighted && <span className={styles.highlightBadge}>Zvýrazněno</span>}
+          {verification.verified && <span className={styles.verifiedBadge}>Ověřený inzerent</span>}
         </div>
 
         <FavoriteButton listingId={listing.id} />
@@ -58,6 +63,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
             <span className={styles.tag}>
               {listing.occupancy || parsed.details.currentUse || 'Stav neuveden'}
             </span>
+            <span className={styles.tagMuted}>PENB {energyClass}</span>
             {opportunityType && <span className={styles.tagMuted}>{opportunityType}</span>}
           </div>
 

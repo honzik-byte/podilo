@@ -1,7 +1,14 @@
 import styles from './page.module.css';
 import Link from 'next/link';
+import PricingCheckout from './PricingCheckout';
 
-export default function PricingPage() {
+interface PricingPageProps {
+  searchParams: Promise<{ listing?: string; cancelled?: string }>;
+}
+
+export default async function PricingPage({ searchParams }: PricingPageProps) {
+  const resolvedParams = await searchParams;
+
   return (
     <div className="container">
       <div className={styles.header}>
@@ -11,41 +18,11 @@ export default function PricingPage() {
         </p>
       </div>
 
-      <div className={styles.pricingGrid}>
-        {/* Card 1 */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2 className={styles.cardTitle}>TOP inzerát</h2>
-            <div className={styles.price}>199 Kč<span> / 7 dní</span></div>
-          </div>
-          <div className={styles.cardBody}>
-            <p>TOP inzeráty jsou zobrazeny na předních pozicích ve výpisu nabídek a jsou označeny štítkem &quot;TOP&quot;.</p>
-          </div>
-        </div>
-
-        {/* Card 2 */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2 className={styles.cardTitle}>Zvýrazněný inzerát</h2>
-            <div className={styles.price}>59 Kč<span> / 7 dní</span></div>
-          </div>
-          <div className={styles.cardBody}>
-            <p>Zvýrazněné inzeráty jsou ve výpisu vizuálně odlišeny (například jemným podbarvením), díky čemuž jsou pro návštěvníky lépe viditelné.</p>
-          </div>
-        </div>
-
-        {/* Card 3 */}
-        <div className={`${styles.card} ${styles.popular}`}>
-          <div className={styles.cardHeader}>
-            <div className={styles.popularBadge}>Kombinace</div>
-            <h2 className={styles.cardTitle}>TOP + zvýraznění</h2>
-            <div className={styles.price}>299 Kč<span> / 7 dní</span></div>
-          </div>
-          <div className={styles.cardBody}>
-            <p>Kombinace obou služeb pro maximální viditelnost nabídky. Zahrnuje prémiovou pozici a vizuální odlišení.</p>
-          </div>
-        </div>
-      </div>
+      <PricingCheckout
+        initialListingId={resolvedParams.listing}
+        cancelled={resolvedParams.cancelled === '1'}
+        selectorMode="header"
+      />
 
       <div className={styles.disclaimerBox}>
         <p className={styles.disclaimerText}>

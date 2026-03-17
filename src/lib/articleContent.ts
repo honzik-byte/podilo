@@ -135,3 +135,20 @@ export const articles: Article[] = [
 export function getArticleBySlug(slug: string) {
   return articles.find((article) => article.slug === slug);
 }
+
+export function getRelatedArticles(slug: string, limit = 3) {
+  const current = getArticleBySlug(slug);
+
+  if (!current) {
+    return [];
+  }
+
+  return articles
+    .filter((article) => article.slug !== slug)
+    .sort((a, b) => {
+      const aScore = Number(a.category === current.category);
+      const bScore = Number(b.category === current.category);
+      return bScore - aScore;
+    })
+    .slice(0, limit);
+}

@@ -38,6 +38,85 @@
   margin-bottom: 1.25rem;
 }
 
+.rangeBox {
+  display: grid;
+  gap: 0.95rem;
+  padding: 1.1rem 1.1rem 1rem;
+  border-radius: 1.15rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.rangeValues {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--foreground);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.rangeTrack {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(17, 24, 39, 0.08) 0%, rgba(17, 24, 39, 0.18) 100%);
+}
+
+.rangeSliders {
+  position: relative;
+  height: 0.35rem;
+  margin-top: -0.35rem;
+}
+
+.rangeInput {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.25rem;
+  transform: translateY(-50%);
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.rangeInput::-webkit-slider-runnable-track {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.rangeInput::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 999px;
+  background: #111827;
+  border: 3px solid #fff;
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.2);
+  cursor: pointer;
+  margin-top: -0.38rem;
+  pointer-events: auto;
+}
+
+.rangeInput::-moz-range-track {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.rangeInput::-moz-range-thumb {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: #111827;
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.2);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
 .filterGroup {
   flex: 1;
   min-width: 200px;
@@ -48,6 +127,25 @@
   gap: 1rem;
   flex: 2;
   min-width: 260px;
+}
+
+.amountInputWrap {
+  position: relative;
+}
+
+.amountInput {
+  padding-right: 4rem !important;
+}
+
+.currencySuffix {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  color: var(--muted-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  pointer-events: none;
 }
 
 .label {
@@ -94,6 +192,22 @@
   border-top: 1px solid #efeff2;
 }
 
+.advancedToggleRow {
+  margin-bottom: 1.25rem;
+}
+
+.advancedToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-weight: 700;
+}
+
 .clearBtn {
   background: #fff;
   border: 1px solid var(--border);
@@ -128,5 +242,14 @@
 
   .checkboxGrid {
     min-width: 0;
+  }
+
+  .rangeValues {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .rangeBox {
+    padding: 1rem;
   }
 }

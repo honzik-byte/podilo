@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { readFavorites, toggleFavorite } from '@/lib/favorites';
+import { getOrCreateFavoritesVisitorId, readFavorites, toggleFavorite } from '@/lib/favorites';
 import styles from './FavoriteButton.module.css';
 
 interface FavoriteButtonProps {
@@ -30,8 +30,22 @@ export default function FavoriteButton({ listingId, variant = 'overlay' }: Favor
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
+    const wasFavorite = readFavorites().includes(listingId);
     const nextFavorites = toggleFavorite(listingId);
     setIsFavorite(nextFavorites.includes(listingId));
+    const visitorId = getOrCreateFavoritesVisitorId();
+
+    void fetch(`/api/favorite-stats/${listingId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        visitorId,
+        action: wasFavorite ? 'unsave' : 'save',
+      }),
+    });
+
   };
 
   return (

@@ -12,6 +12,7 @@ import {
   matchesText,
   parseListing,
 } from '@/lib/listingMetadata';
+import { sortListings } from '@/lib/listingSort';
 
 const ListingsMap = dynamic(() => import('@/components/ListingsMap'), {
   ssr: false,
@@ -20,6 +21,7 @@ const ListingsMap = dynamic(() => import('@/components/ListingsMap'), {
 
 interface ListingsClientViewProps {
   listings: Listing[];
+  maxPriceCap: number;
   initialSearchParams: { [key: string]: string | string[] | undefined };
   hasError?: boolean;
 }
@@ -30,6 +32,7 @@ function getFirstQueryValue(value: string | string[] | undefined) {
 
 export default function ListingsClientView({
   listings,
+  maxPriceCap,
   initialSearchParams,
   hasError = false,
 }: ListingsClientViewProps) {
@@ -48,7 +51,7 @@ export default function ListingsClientView({
     const topOnly = getFirstQueryValue(initialSearchParams.topOnly) === 'true';
     const highlightedOnly = getFirstQueryValue(initialSearchParams.highlightedOnly) === 'true';
 
-    return listings.filter((listing) => {
+    return sortListings(listings.filter((listing) => {
       const parsed = parseListing(listing);
       const normalizedOccupancy = (listing.occupancy || parsed.details.currentUse || '').toLowerCase();
       const normalizedStatus = getListingStatus(listing, parsed.details).toLowerCase();
@@ -109,12 +112,12 @@ export default function ListingsClientView({
       }
 
       return true;
-    });
+    }));
   }, [initialSearchParams, listings]);
 
   return (
     <div>
-      <ListingsFilter />
+      <ListingsFilter maxPriceCap={maxPriceCap} />
 
       <div className={styles.viewToggle}>
         <button

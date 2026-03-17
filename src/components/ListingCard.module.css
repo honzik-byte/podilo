@@ -63,7 +63,8 @@
 }
 
 .topBadge,
-.highlightBadge {
+.highlightBadge,
+.verifiedBadge {
   display: inline-flex;
   align-items: center;
   min-height: 2rem;
@@ -86,11 +87,18 @@
   color: var(--foreground);
 }
 
+.verifiedBadge {
+  background: #ecfdf3;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
 .content {
   padding: 1.4rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  min-height: 18.5rem;
 }
 
 .metaRow {
@@ -108,6 +116,7 @@
   margin-bottom: 0.7rem;
   line-height: 1.3;
   color: var(--foreground);
+  min-height: 3.15rem;
 }
 
 .location {
@@ -122,6 +131,7 @@
   padding: 0.28rem 0.65rem;
   border-radius: 999px;
   border: 1px solid #ebebef;
+  white-space: nowrap;
 }
 
 .tags {
@@ -129,6 +139,8 @@
   flex-wrap: wrap;
   gap: 0.6rem;
   margin-bottom: 1.25rem;
+  min-height: 5.15rem;
+  align-content: flex-start;
 }
 
 .tag,
@@ -191,6 +203,7 @@
   color: #1f2937;
   font-size: 0.88rem;
   line-height: 1.5;
+  min-height: 4.5rem;
 }
 
 @media (max-width: 640px) {
@@ -209,5 +222,12 @@
   .secondaryPrice {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .content,
+  .title,
+  .tags,
+  .insight {
+    min-height: 0;
   }
 }

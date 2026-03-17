@@ -9,6 +9,56 @@
   background: var(--muted);
 }
 
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.controlButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6rem;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-weight: 700;
+}
+
+.controlButtonActive {
+  background: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+
+.radiusLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-weight: 700;
+}
+
+.resultsBadge {
+  margin-left: auto;
+  color: var(--muted-text);
+  font-weight: 700;
+}
+
+.helperText {
+  width: 100%;
+  color: var(--muted-text);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
 .emptyMap {
   height: 500px;
   width: 100%;
@@ -144,4 +194,42 @@
 .popupLocation {
   font-size: 0.8rem;
   color: var(--muted-text);
+}
+
+.clusterPin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+}
+
+.clusterPopup {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.2rem;
+}
+
+.clusterList {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.clusterLink {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 720px) {
+  .resultsBadge {
+    width: 100%;
+    margin-left: 0;
+  }
 }

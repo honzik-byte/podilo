@@ -1,7 +1,7 @@
 .home {
   display: flex;
   flex-direction: column;
-  gap: 5rem;
+  gap: 4.25rem;
   padding-bottom: 5rem;
 }
 
@@ -85,6 +85,17 @@
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
 }
 
+.proofSection,
+.feedSection,
+.registerSection,
+.educationSection {
+  position: relative;
+}
+
+.proofSection {
+  margin-top: -0.75rem;
+}
+
 .proofGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -94,6 +105,11 @@
 .proofCard,
 .articleCard {
   padding: 1.35rem;
+}
+
+.proofCard {
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
 }
 
 .proofCard strong {
@@ -115,7 +131,7 @@
   justify-content: space-between;
   align-items: flex-end;
   gap: 1rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.4rem;
 }
 
 .sectionHeaderSimple {
@@ -143,6 +159,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
+  align-items: stretch;
 }
 
 .emptyState {

@@ -18,4 +18,5 @@ export interface Listing {
   is_highlighted: boolean;
   user_id?: string | null;
   created_at: string;
+  updated_at?: string | null;
 }

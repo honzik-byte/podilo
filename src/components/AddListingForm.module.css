@@ -136,9 +136,54 @@
   padding-top: 0.5rem;
 }
 
-.actionNote {
+.actionColumn {
+  display: grid;
+  gap: 0.9rem;
   max-width: 42rem;
+}
+
+.actionNote {
   font-size: 0.92rem;
+}
+
+.promotionCard {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.05rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #ffffff 0%, #f7f7fa 100%);
+}
+
+.promotionCopy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.promotionCopy strong {
+  font-size: 0.98rem;
+  letter-spacing: -0.02em;
+}
+
+.promotionCopy p {
+  color: var(--muted-text);
+  line-height: 1.55;
+  font-size: 0.9rem;
+}
+
+.promotionLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.8rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-weight: 700;
+  white-space: nowrap;
+  background: #fff;
 }
 
 .error {
@@ -175,7 +220,33 @@
     align-items: stretch;
   }
 
+  .promotionCard {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .checkPills {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 520px) {
+  .formHeader {
+    gap: 0.65rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .formTitle {
+    font-size: 1.55rem;
+  }
+
+  .section,
+  .optionalBlock {
+    margin-bottom: 1rem;
+  }
+
+  .sectionHeader,
+  .optionalSummary {
+    margin-bottom: 1rem;
   }
 }

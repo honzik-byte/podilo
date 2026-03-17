@@ -92,3 +92,23 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 640px) {
+  .page {
+    padding: 3.25rem 1rem 4rem;
+  }
+
+  .intro,
+  .formCard {
+    padding: 1.15rem;
+    border-radius: 1.2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    margin-top: 0.8rem;
+  }
+}

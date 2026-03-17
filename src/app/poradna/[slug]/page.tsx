@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { articles, getArticleBySlug } from '@/lib/articleContent';
+import { articles, getArticleBySlug, getRelatedArticles } from '@/lib/articleContent';
 import styles from './page.module.css';
 
 export async function generateStaticParams() {
@@ -18,6 +18,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${article.title} - Podilo`,
     description: article.seoDescription,
+    openGraph: {
+      title: `${article.title} - Podilo`,
+      description: article.seoDescription,
+    },
   };
 }
 
@@ -28,6 +32,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   if (!article) {
     notFound();
   }
+
+  const relatedArticles = getRelatedArticles(article.slug, 3);
 
   return (
     <article className={`container ${styles.page}`}>
@@ -70,6 +76,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <Link href="/register" className={styles.secondaryLink}>Vytvořit účet</Link>
         </div>
       </div>
+
+      {relatedArticles.length > 0 && (
+        <div className={styles.footerCard}>
+          <h3>Související články</h3>
+          <p>Navazující témata z Poradny, která pomáhají zasadit nabídky do širšího kontextu.</p>
+          <div className={styles.relatedLinks}>
+            {relatedArticles.map((relatedArticle) => (
+              <Link key={relatedArticle.slug} href={`/poradna/${relatedArticle.slug}`} className={styles.relatedLink}>
+                {relatedArticle.title}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </article>
   );
 }

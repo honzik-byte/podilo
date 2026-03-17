@@ -1,0 +1,25 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.86rem;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.message {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted-text);
+  font-size: 0.9rem;
+}

@@ -7,6 +7,11 @@ import Footer from '@/components/Footer'
 export const metadata: Metadata = {
   title: 'Podilo - Tržiště podílů nemovitostí',
   description: 'Minimalistický online marketplace zaměřený výhradně na prodej a nákup podílů nemovitostí.',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 }
 
 export default function RootLayout({

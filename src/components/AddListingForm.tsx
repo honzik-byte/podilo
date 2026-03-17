@@ -2,17 +2,23 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Button from '@/components/Button';
-import { ListingDetails, serializeListingDescription } from '@/lib/listingMetadata';
+import { getPropertyFieldConfig, ListingDetails, serializeListingDescription } from '@/lib/listingMetadata';
+import ListingImageManager from '@/components/ListingImageManager';
+import { isValidListingPhone, isValidShareSize } from '@/lib/listingFormValidation';
 import styles from './AddListingForm.module.css';
 
 const propertyTypes = ['Byt', 'Rodinný dům', 'Pozemek', 'Komerční objekt', 'Garáž'];
+const supportEmail = 'podpora@podilo.cz';
 
 export default function AddListingForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [propertyType, setPropertyType] = useState('');
+  const fieldConfig = getPropertyFieldConfig(propertyType);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -28,11 +34,41 @@ export default function AddListingForm() {
     setError('');
 
     const formData = new FormData(event.currentTarget);
+    const images = JSON.parse(String(formData.get('images') || '[]')) as string[];
+    const shareSize = String(formData.get('share_size') || '');
+    const phone = String(formData.get('contact_phone') || '');
+
+    if (!isValidShareSize(shareSize)) {
+      setError('Velikost podílu zadejte ve formátu 1/2, 1/3 nebo podobně.');
+      setLoading(false);
+      return;
+    }
+
+    const price = Number(formData.get('price'));
+    if (!Number.isFinite(price) || price < 10000) {
+      setError('Cena za podíl musí být alespoň 10 000 Kč.');
+      setLoading(false);
+      return;
+    }
+
+    if (phone && !isValidListingPhone(phone)) {
+      setError('Telefon zadejte v platném formátu, například +420 123 456 789.');
+      setLoading(false);
+      return;
+    }
+
+    if (images.length < 3) {
+      setError('Pro důvěryhodný inzerát přidejte alespoň 3 kvalitní fotografie.');
+      setLoading(false);
+      return;
+    }
+
     const details: ListingDetails = {
       disposition: (formData.get('disposition') as string) || undefined,
       usableArea: (formData.get('usable_area') as string) || undefined,
       roomCount: (formData.get('room_count') as string) || undefined,
       propertyCondition: (formData.get('property_condition') as string) || undefined,
+      energyClass: (formData.get('energy_class') as string) || undefined,
       floor: (formData.get('floor') as string) || undefined,
       elevator: (formData.get('elevator') as string) || undefined,
       balcony: formData.get('balcony') === 'on',
@@ -57,16 +93,16 @@ export default function AddListingForm() {
       location: formData.get('location') as string,
       street_address: formData.get('street_address') as string,
       property_type: formData.get('property_type') as string,
-      share_size: formData.get('share_size') as string,
-      price: Number(formData.get('price')),
+      share_size: shareSize,
+      price,
       full_property_value: formData.get('full_property_value')
         ? Number(formData.get('full_property_value'))
         : null,
       occupancy: (formData.get('occupancy') as string) || null,
       description: serializeListingDescription((formData.get('description') as string) || '', details),
-      contact_email: formData.get('contact_email') as string,
-      contact_phone: (formData.get('contact_phone') as string) || null,
-      images: [] as string[],
+      contact_email: supportEmail,
+      contact_phone: phone || null,
+      images,
       user_id: '',
     };
 
@@ -102,30 +138,6 @@ export default function AddListingForm() {
         lat,
         lng,
       };
-
-      const fileInput = document.getElementById('image') as HTMLInputElement | null;
-      if (fileInput?.files?.length) {
-        for (let index = 0; index < fileInput.files.length; index += 1) {
-          const file = fileInput.files[index];
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${Math.random()}.${fileExt}`;
-          const filePath = `${fileName}`;
-
-          const { error: uploadError } = await supabase.storage
-            .from('listing_images')
-            .upload(filePath, file);
-
-          if (uploadError) {
-            throw uploadError;
-          }
-
-          const {
-            data: { publicUrl },
-          } = supabase.storage.from('listing_images').getPublicUrl(filePath);
-
-          data.images.push(publicUrl);
-        }
-      }
 
       const { data: insertedListing, error: insertError } = await supabase
         .from('listings')
@@ -184,7 +196,14 @@ export default function AddListingForm() {
         <div className={styles.grid}>
           <div className="form-group">
             <label htmlFor="property_type" className="label">Typ nemovitosti *</label>
-            <select id="property_type" name="property_type" required className="select">
+            <select
+              id="property_type"
+              name="property_type"
+              required
+              className="select"
+              value={propertyType}
+              onChange={(event) => setPropertyType(event.target.value)}
+            >
               <option value="">Vyberte typ</option>
               {propertyTypes.map((propertyType) => (
                 <option key={propertyType} value={propertyType}>
@@ -203,6 +222,7 @@ export default function AddListingForm() {
               required
               className="input"
               placeholder="Např. 1/2, 1/3, 1/6"
+              pattern="^\d+\s*\/\s*\d+$"
             />
           </div>
         </div>
@@ -246,7 +266,7 @@ export default function AddListingForm() {
         <div className={styles.grid}>
           <div className="form-group">
             <label htmlFor="price" className="label">Cena za nabízený podíl (Kč) *</label>
-            <input type="number" id="price" name="price" required className="input" min="1" placeholder="Např. 2500000" />
+            <input type="number" id="price" name="price" required className="input" min="10000" step="1000" placeholder="Např. 2500000" />
           </div>
 
           <div className="form-group">
@@ -292,48 +312,89 @@ export default function AddListingForm() {
         </summary>
         <div className={styles.optionalContent}>
           <div className={styles.grid}>
+            {fieldConfig.showDisposition && (
+              <div className="form-group">
+                <label htmlFor="disposition" className="label">Dispozice</label>
+                <input type="text" id="disposition" name="disposition" className="input" placeholder="Např. 3+kk" />
+              </div>
+            )}
             <div className="form-group">
-              <label htmlFor="disposition" className="label">Dispozice</label>
-              <input type="text" id="disposition" name="disposition" className="input" placeholder="Např. 3+kk" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="usable_area" className="label">Užitná plocha / výměra</label>
-              <input type="text" id="usable_area" name="usable_area" className="input" placeholder="Např. 82 m2" />
-            </div>
-          </div>
-
-          <div className={styles.grid}>
-            <div className="form-group">
-              <label htmlFor="room_count" className="label">Počet místností</label>
-              <input type="text" id="room_count" name="room_count" className="input" placeholder="Např. 4" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="property_condition" className="label">Stav nemovitosti</label>
-              <input type="text" id="property_condition" name="property_condition" className="input" placeholder="Např. po rekonstrukci" />
+              <label htmlFor="usable_area" className="label">{fieldConfig.areaLabel}</label>
+              <input
+                type="text"
+                id="usable_area"
+                name="usable_area"
+                className="input"
+                placeholder={propertyType === 'Pozemek' ? 'Např. 1 240 m2' : 'Např. 82 m2'}
+              />
             </div>
           </div>
 
           <div className={styles.grid}>
+            {fieldConfig.showRoomCount && (
+              <div className="form-group">
+                <label htmlFor="room_count" className="label">Počet místností</label>
+                <input type="text" id="room_count" name="room_count" className="input" placeholder="Např. 4" />
+              </div>
+            )}
+            {fieldConfig.showPropertyCondition && (
+              <div className="form-group">
+                <label htmlFor="property_condition" className="label">Stav nemovitosti</label>
+                <input type="text" id="property_condition" name="property_condition" className="input" placeholder="Např. po rekonstrukci" />
+              </div>
+            )}
+          </div>
+
+          <div className={styles.grid}>
+            {fieldConfig.showEnergyClass && (
+              <div className="form-group">
+                <label htmlFor="energy_class" className="label">Energetická třída</label>
+                <select id="energy_class" name="energy_class" className="select">
+                  <option value="">Neuvedeno</option>
+                  <option value="A">A - mimořádně úsporná</option>
+                  <option value="B">B - velmi úsporná</option>
+                  <option value="C">C - úsporná</option>
+                  <option value="D">D - méně úsporná</option>
+                  <option value="E">E - nehospodárná</option>
+                  <option value="F">F - velmi nehospodárná</option>
+                  <option value="G">G - mimořádně nehospodárná</option>
+                </select>
+              </div>
+            )}
+            {fieldConfig.showFloor && (
+              <div className="form-group">
+                <label htmlFor="floor" className="label">Patro</label>
+                <input type="text" id="floor" name="floor" className="input" placeholder="Např. 3. patro" />
+              </div>
+            )}
+          </div>
+
+          <div className={styles.grid}>
+            {fieldConfig.showElevator && (
+              <div className="form-group">
+                <label htmlFor="elevator" className="label">Výtah</label>
+                <select id="elevator" name="elevator" className="select">
+                  <option value="">Neuvedeno</option>
+                  <option value="Ano">Ano</option>
+                  <option value="Ne">Ne</option>
+                </select>
+              </div>
+            )}
             <div className="form-group">
-              <label htmlFor="floor" className="label">Patro</label>
-              <input type="text" id="floor" name="floor" className="input" placeholder="Např. 3. patro" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="elevator" className="label">Výtah</label>
-              <select id="elevator" name="elevator" className="select">
-                <option value="">Neuvedeno</option>
-                <option value="Ano">Ano</option>
-                <option value="Ne">Ne</option>
-              </select>
+              <label htmlFor="contact_email" className="label">Kontaktní e-mail *</label>
+              <input type="email" id="contact_email" name="contact_email" required readOnly className="input" value={supportEmail} />
+              <p className={styles.helper}>Veškeré e-mailové poptávky směrujeme přes centrální podporu Podilo.</p>
             </div>
           </div>
 
-          <div className={styles.checkPills}>
-            <label><input type="checkbox" name="balcony" /> Balkon</label>
-            <label><input type="checkbox" name="terrace" /> Terasa</label>
-            <label><input type="checkbox" name="cellar" /> Sklep</label>
-            <label><input type="checkbox" name="parking" /> Parkování</label>
-          </div>
+          {fieldConfig.showFeatureTags && (
+            <div className={styles.checkPills}>
+              <label><input type="checkbox" name="balcony" /> Balkon</label>
+              <label><input type="checkbox" name="terrace" /> Terasa</label>
+              <label><input type="checkbox" name="cellar" /> Sklep</label>
+              <label><input type="checkbox" name="parking" /> Parkování</label>
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="description" className="label">Hlavní popis nabídky</label>
@@ -422,28 +483,36 @@ export default function AddListingForm() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="image" className="label">Fotografie</label>
-          <input type="file" id="image" name="image" accept="image/*" multiple className="input" style={{ padding: '0.6rem' }} />
-          <p className={styles.helper}>Můžete nahrát více fotografií. První bude použitá jako hlavní.</p>
+          <label className="label">Fotografie</label>
+          <ListingImageManager inputName="images" />
         </div>
 
         <div className={styles.grid}>
           <div className="form-group">
-            <label htmlFor="contact_email" className="label">Kontaktní e-mail *</label>
-            <input type="email" id="contact_email" name="contact_email" required className="input" placeholder="email@priklad.cz" />
-          </div>
-
-          <div className="form-group">
             <label htmlFor="contact_phone" className="label">Telefonní číslo</label>
-            <input type="tel" id="contact_phone" name="contact_phone" className="input" placeholder="+420 123 456 789" />
-            <p className={styles.helper}>Telefon zobrazujeme pouze přihlášeným uživatelům.</p>
+            <input type="tel" id="contact_phone" name="contact_phone" className="input" placeholder="+420 123 456 789" pattern="^\+?[0-9 ]{9,16}$" />
+            <p className={styles.helper}>Telefon zobrazujeme pouze přihlášeným uživatelům. Fotografie musí mít alespoň 1200×800 px.</p>
           </div>
+          <div />
         </div>
       </div>
 
       <div className={styles.actions}>
-        <div className={styles.actionNote}>
-          Inzerát je možné zveřejnit i bez vyplnění volitelných sekcí. Čím více kontextu ale doplníte, tím lépe se bude investorům vyhodnocovat.
+        <div className={styles.actionColumn}>
+          <div className={styles.actionNote}>
+            Inzerát je možné zveřejnit i bez vyplnění volitelných sekcí. Čím více kontextu ale doplníte, tím lépe se bude investorům vyhodnocovat.
+          </div>
+          <div className={styles.promotionCard}>
+            <div className={styles.promotionCopy}>
+              <strong>Zvýšení viditelnosti můžete zapnout hned po zveřejnění</strong>
+              <p>
+                TOP pozice nebo zvýraznění pomohou dostat nabídku výš ve výpisu, ale necháváme to jako volitelný krok až po publikaci.
+              </p>
+            </div>
+            <Link href="/cenik" className={styles.promotionLink}>
+              Zobrazit možnosti
+            </Link>
+          </div>
         </div>
         <Button type="submit" disabled={loading}>
           {loading ? 'Ukládám...' : 'Zveřejnit inzerát'}

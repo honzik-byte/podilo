@@ -6,7 +6,8 @@ import WhyRegisterCard from '@/components/WhyRegisterCard';
 import HeroStats from '@/components/HeroStats';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import { articles } from '@/lib/articleContent';
-import { mergeWithLocalListings } from '@/lib/localListings';
+import { getLocalListings, mergeWithLocalListings } from '@/lib/localListings';
+import { syncExpiredPromotions } from '@/lib/promotionExpirations';
 import styles from './page.module.css';
 import { Listing } from '@/types';
 
@@ -15,15 +16,28 @@ export const revalidate = 0;
 const articleHighlights = articles.slice(0, 3);
 
 export default async function Home() {
-  const { data: listings, error } = await supabase
-    .from('listings')
-    .select('*')
-    .order('is_top', { ascending: false })
-    .order('created_at', { ascending: false })
-    .limit(6);
+  await syncExpiredPromotions();
 
-  const displayListings = await mergeWithLocalListings((listings as Listing[]) || []);
-  const publishedListings = displayListings.length;
+  const [
+    { data: listings, error },
+    { count: totalPublishedCount },
+    localListings,
+  ] = await Promise.all([
+    supabase
+      .from('listings')
+      .select('*')
+      .order('is_top', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(6),
+    supabase
+      .from('listings')
+      .select('id', { count: 'exact', head: true }),
+    getLocalListings(),
+  ]);
+
+  const allListings = await mergeWithLocalListings((listings as Listing[]) || []);
+  const featuredListings = allListings.slice(0, 6);
+  const publishedListings = (totalPublishedCount || 0) + localListings.length;
 
   return (
     <div className={styles.home}>
@@ -87,9 +101,9 @@ export default async function Home() {
           </Link>
         </div>
 
-        {displayListings.length > 0 ? (
+        {featuredListings.length > 0 ? (
           <div className={styles.grid}>
-            {displayListings.map((listing) => (
+            {featuredListings.map((listing) => (
               <ListingCard key={listing.id} listing={listing} />
             ))}
           </div>

@@ -1,4 +1,5 @@
 export const FAVORITES_STORAGE_KEY = 'podilo-favorites';
+export const FAVORITES_VISITOR_KEY = 'podilo-favorites-visitor';
 
 export function readFavorites() {
   if (typeof window === 'undefined') {
@@ -20,6 +21,21 @@ export function writeFavorites(ids: string[]) {
 
   window.localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(ids));
   window.dispatchEvent(new CustomEvent('podilo-favorites-updated', { detail: ids }));
+}
+
+export function getOrCreateFavoritesVisitorId() {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  const existing = window.localStorage.getItem(FAVORITES_VISITOR_KEY);
+  if (existing) {
+    return existing;
+  }
+
+  const nextId = `visitor-${crypto.randomUUID()}`;
+  window.localStorage.setItem(FAVORITES_VISITOR_KEY, nextId);
+  return nextId;
 }
 
 export function toggleFavorite(listingId: string) {

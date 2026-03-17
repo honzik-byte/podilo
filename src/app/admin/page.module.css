@@ -1,7 +1,6 @@
 .header {
   padding: 4rem 0 3rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .title {
@@ -9,7 +8,7 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
-  color: #d32f2f; /* Dark red for admin */
+  color: var(--foreground);
 }
 
 .subtitle {
@@ -17,35 +16,88 @@
   font-size: 1.1rem;
 }
 
-.tableContainer {
-  background: var(--background);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow-x: auto;
+.section {
+  margin-bottom: 2rem;
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
+.sectionHeader {
+  margin-bottom: 1rem;
 }
 
-.table th, .table td {
-  padding: 1.2rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.table th {
-  background: var(--muted);
-  font-weight: 600;
-  color: var(--muted-text);
+.sectionEyebrow {
   text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--muted-text);
+  font-weight: 800;
+  margin-bottom: 0.55rem;
 }
 
-.table tr:last-child td {
-  border-bottom: none;
+.sectionTitle {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.userGrid,
+.listingGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.userGrid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.listingGrid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.userCard,
+.listingCard {
+  padding: 1.1rem;
+  border-radius: 1.1rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+}
+
+.userTop,
+.listingTop,
+.listingInfo {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.userTop {
+  margin-bottom: 0.55rem;
+}
+
+.userId,
+.listingMeta,
+.listingInfo {
+  color: var(--muted-text);
+}
+
+.userActions {
+  margin-top: 0.85rem;
+}
+
+.listingTop {
+  margin-bottom: 0.55rem;
+}
+
+.listingTitle {
+  font-size: 1.08rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.listingInfo {
+  margin: 0.75rem 0 0.95rem;
+  font-size: 0.92rem;
 }
 
 .actions {
@@ -53,6 +105,57 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   align-items: center;
+  margin-top: 0.75rem;
+}
+
+.toggleRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.togglePill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.2rem;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.togglePill:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.toggleActive {
+  background: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+
+.toggleAccent {
+  background: #fff7ed;
+  border-color: #fdba74;
+  color: #9a3412;
+}
+
+.statusSelect {
+  min-height: 2.2rem;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 0.82rem;
 }
 
 .editLink {
@@ -67,4 +170,9 @@
   color: var(--foreground);
   font-weight: 700;
   font-size: 0.85rem;
+}
+
+.price {
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
 }

@@ -1,7 +1,7 @@
 .header {
   text-align: center;
-  max-width: 700px;
-  margin: 4.5rem auto 3rem;
+  max-width: 760px;
+  margin: 4.5rem auto 2rem;
 }
 
 .title {
@@ -22,6 +22,94 @@
   grid-template-columns: 1fr;
   gap: 2rem;
   margin-bottom: 4rem;
+}
+
+.selectorCard,
+.statusCard {
+  background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+  margin-bottom: 2rem;
+}
+
+.selectorCard {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.selectorCardHeader {
+  margin-bottom: 2.5rem;
+  padding: 1.25rem 1.35rem;
+}
+
+.selectorEyebrow,
+.statusEyebrow {
+  margin-bottom: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  color: var(--muted-text);
+  font-weight: 800;
+}
+
+.selectorTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.selectorText,
+.selectorInfo,
+.notice,
+.error,
+.statusCard p {
+  color: var(--muted-text);
+  line-height: 1.65;
+}
+
+.selectorGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.selectorField {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.selectorLabel {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-text);
+}
+
+.selectedListingCard {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.05rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.selectedListingCard strong {
+  font-size: 1rem;
+}
+
+.selectedListingCard span {
+  color: var(--muted-text);
+}
+
+.selectorActions,
+.statusActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
 }
 
 @media (min-width: 768px) {
@@ -94,6 +182,8 @@
 }
 
 .cardBody {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
 }
 
@@ -101,6 +191,19 @@
   color: #555;
   line-height: 1.6;
   margin: 0;
+}
+
+.featureList {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  padding-left: 1.1rem;
+  color: var(--muted-text);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.cardAction {
+  margin-top: 1.35rem;
 }
 
 .disclaimerBox {
@@ -128,4 +231,33 @@
 .linkLine a {
   color: var(--foreground);
   font-weight: 700;
+}
+
+.notice {
+  color: #7c5c12;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.inlineLink {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .header {
+    margin-top: 3rem;
+  }
+
+  .selectorCard,
+  .statusCard,
+  .card {
+    padding: 1.35rem;
+  }
+
+  .selectorCardHeader {
+    margin-bottom: 1.5rem;
+  }
 }
