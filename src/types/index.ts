@@ -17,6 +17,8 @@ export interface Listing {
   is_top: boolean;
   is_highlighted: boolean;
   user_id?: string | null;
+  top_until?: string | null;
+  highlighted_until?: string | null;
   created_at: string;
   updated_at?: string | null;
 }

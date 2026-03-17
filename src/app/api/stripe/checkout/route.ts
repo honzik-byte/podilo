@@ -56,17 +56,27 @@ export async function POST(request: Request) {
 
     const stripe = getStripeClient();
     const origin = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
+    const metadata = {
+      listing_id: payload.listingId,
+      listing_title: (listing as Listing).title,
+      promotion_type: plan.id,
+      plan_id: plan.id,
+      user_id: user.id,
+    };
+
+    console.info('[StripePromotion] Creating checkout session', {
+      listingId: payload.listingId,
+      promotionType: plan.id,
+      stripePriceId,
+      userId: user.id,
+    });
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       success_url: `${origin}/cenik/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cenik?listing=${payload.listingId}&cancelled=1`,
       client_reference_id: payload.listingId,
-      metadata: {
-        listing_id: payload.listingId,
-        listing_title: (listing as Listing).title,
-        plan_id: plan.id,
-        user_id: user.id,
-      },
+      metadata,
       line_items: [
         {
           quantity: 1,
@@ -75,9 +85,15 @@ export async function POST(request: Request) {
       ],
     });
 
+    console.info('[StripePromotion] Checkout session created', {
+      sessionId: session.id,
+      listingId: payload.listingId,
+      metadata,
+    });
+
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error(error);
+    console.error('[StripePromotion] Checkout session creation failed', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Stripe checkout se nepodařilo vytvořit.' },
       { status: 500 }
