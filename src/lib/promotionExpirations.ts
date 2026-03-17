@@ -1,87 +1,74 @@
 import 'server-only';
 
-import { promises as fs } from 'fs';
-import path from 'path';
 import { createServerSupabaseAdmin } from '@/lib/serverSupabase';
-import { getPromotionPlan, type PromotionPlanId } from '@/lib/promotionPlans';
-
-interface PromotionExpirationRecord {
-  listingId: string;
-  planId: PromotionPlanId;
-  stripeSessionId: string;
-  activatedAt: string;
-  expiresAt: string;
-}
-
-const promotionsPath = path.join(process.cwd(), 'src/data/promotionExpirations.json');
-
-async function readPromotionExpirations() {
-  const content = await fs.readFile(promotionsPath, 'utf8');
-  return JSON.parse(content) as PromotionExpirationRecord[];
-}
-
-async function writePromotionExpirations(records: PromotionExpirationRecord[]) {
-  await fs.writeFile(promotionsPath, JSON.stringify(records, null, 2), 'utf8');
-}
-
-export async function upsertPromotionExpiration(record: PromotionExpirationRecord) {
-  const records = await readPromotionExpirations();
-  const nextRecords = records.filter((item) => item.listingId !== record.listingId);
-  nextRecords.push(record);
-  await writePromotionExpirations(nextRecords);
-}
 
 export async function syncExpiredPromotions() {
-  const records = await readPromotionExpirations();
-  const now = Date.now();
-  const expired = records.filter((record) => new Date(record.expiresAt).getTime() <= now);
+  const adminClient = createServerSupabaseAdmin();
+  const nowIso = new Date().toISOString();
 
-  if (expired.length === 0) {
+  const { data: listings, error } = await adminClient
+    .from('listings')
+    .select('id, is_top, is_highlighted, top_until, highlighted_until')
+    .or(`top_until.lte.${nowIso},highlighted_until.lte.${nowIso}`);
+
+  if (error) {
+    console.error('[StripePromotion] Failed to query expired promotions', {
+      nowIso,
+      error,
+    });
+    return { expiredCount: 0, error: error.message };
+  }
+
+  if (!listings || listings.length === 0) {
     return { expiredCount: 0 };
   }
 
-  const adminClient = createServerSupabaseAdmin();
+  let expiredCount = 0;
 
-  for (const record of expired) {
-    const plan = getPromotionPlan(record.planId);
-
-    if (!plan) {
-      continue;
-    }
-
+  for (const listing of listings as Array<{
+    id: string;
+    is_top?: boolean | null;
+    is_highlighted?: boolean | null;
+    top_until?: string | null;
+    highlighted_until?: string | null;
+  }>) {
     const resetPayload: Record<string, boolean | null> = {};
 
-    if (plan.apply.is_top) {
+    if (listing.top_until && new Date(listing.top_until).getTime() <= Date.now()) {
       resetPayload.is_top = false;
       resetPayload.top_until = null;
     }
 
-    if (plan.apply.is_highlighted) {
+    if (listing.highlighted_until && new Date(listing.highlighted_until).getTime() <= Date.now()) {
       resetPayload.is_highlighted = false;
       resetPayload.highlighted_until = null;
     }
 
-    const { error } = await adminClient
+    if (Object.keys(resetPayload).length === 0) {
+      continue;
+    }
+
+    const { error: updateError } = await adminClient
       .from('listings')
       .update(resetPayload)
-      .eq('id', record.listingId);
+      .eq('id', listing.id);
 
-    if (error) {
+    if (updateError) {
       console.error('[StripePromotion] Promotion expiry reset failed', {
-        listingId: record.listingId,
+        listingId: listing.id,
         resetPayload,
-        error,
+        error: updateError,
       });
-    } else {
-      console.info('[StripePromotion] Promotion expired and reset', {
-        listingId: record.listingId,
-        resetPayload,
-      });
+      continue;
     }
+
+    expiredCount += 1;
+
+    console.info('[StripePromotion] Promotion expired and reset', {
+      listingId: listing.id,
+      resetPayload,
+    });
   }
 
-  const activeRecords = records.filter((record) => new Date(record.expiresAt).getTime() > now);
-  await writePromotionExpirations(activeRecords);
-
-  return { expiredCount: expired.length };
+  return { expiredCount };
 }

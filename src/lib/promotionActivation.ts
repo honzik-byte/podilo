@@ -1,6 +1,5 @@
 import type Stripe from 'stripe';
 import { getPromotionPlan } from '@/lib/promotionPlans';
-import { upsertPromotionExpiration } from '@/lib/promotionExpirations';
 import { createServerSupabaseAdmin } from '@/lib/serverSupabase';
 
 export async function activatePromotionFromSession(session: Stripe.Checkout.Session) {
@@ -62,14 +61,6 @@ export async function activatePromotionFromSession(session: Stripe.Checkout.Sess
     });
     throw new Error(updateError.message);
   }
-
-  await upsertPromotionExpiration({
-    listingId,
-    planId: plan.id,
-    stripeSessionId: session.id,
-    activatedAt: activatedAt.toISOString(),
-    expiresAt: expiresAtIso,
-  });
 
   console.info('[StripePromotion] Supabase promotion update succeeded', {
     sessionId: session.id,
