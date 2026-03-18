@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/jobs/promotions/expire",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/jobs/notifications",
+      "schedule": "15 * * * *"
+    }
+  ]
+}

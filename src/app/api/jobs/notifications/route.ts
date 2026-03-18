@@ -3,7 +3,7 @@ import { sendEmail, renderPromotionEmail } from '@/lib/emailNotifications';
 import { reportError } from '@/lib/errorReporting';
 import { getPendingNotificationJobs, markNotificationFailed, markNotificationSent } from '@/lib/notificationJobs';
 
-export async function POST() {
+async function runNotificationJob() {
   const jobs = await getPendingNotificationJobs();
   let sent = 0;
   let failed = 0;
@@ -40,4 +40,12 @@ export async function POST() {
   }
 
   return NextResponse.json({ processed: jobs.length, sent, failed });
+}
+
+export async function GET() {
+  return runNotificationJob();
+}
+
+export async function POST() {
+  return runNotificationJob();
 }
