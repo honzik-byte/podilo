@@ -88,7 +88,11 @@
 .proofSection,
 .feedSection,
 .registerSection,
-.educationSection {
+.educationSection,
+.trustSection,
+.propertySection,
+.faqSection,
+.investorSection {
   position: relative;
 }
 
@@ -120,9 +124,79 @@
 }
 
 .proofCard p,
-.articleCard p {
+.articleCard p,
+.trustCard p,
+.faqCard p,
+.typeCard strong {
   color: var(--muted-text);
   line-height: 1.75;
+}
+
+.trustGrid,
+.faqGrid,
+.typeGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.trustGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.trustCard,
+.faqCard,
+.typeCard,
+.investorCard {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+}
+
+.trustCard,
+.faqCard,
+.typeCard {
+  padding: 1.35rem;
+}
+
+.trustCard strong,
+.typeCard span,
+.faqCard h3 {
+  display: block;
+  margin-bottom: 0.65rem;
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+}
+
+.typeGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.typeCard span {
+  color: var(--foreground);
+  font-weight: 800;
+}
+
+.typeCard strong {
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.faqGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.faqCard h3 {
+  line-height: 1.35;
+}
+
+.investorCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
 }
 
 .sectionHeader,
@@ -197,12 +271,20 @@
 
 @media (max-width: 1024px) {
   .heroContent,
-  .proofGrid {
+  .proofGrid,
+  .trustGrid,
+  .faqGrid,
+  .typeGrid {
     grid-template-columns: 1fr;
   }
 
   .heroTitle {
     max-width: none;
+  }
+
+  .investorCard {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -238,5 +320,12 @@
   .grid,
   .articleGrid {
     grid-template-columns: 1fr;
+  }
+
+  .trustCard,
+  .faqCard,
+  .typeCard,
+  .investorCard {
+    padding: 1.15rem;
   }
 }

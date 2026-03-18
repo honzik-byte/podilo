@@ -1,10 +1,18 @@
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './ListingsFilter.module.css';
 import Button from '@/components/Button';
 import { formatCzechCurrency } from '@/lib/formatting';
+
+const SAVED_FILTERS_KEY = 'podilo-saved-filters';
+
+type SavedFilter = {
+  id: string;
+  name: string;
+  queryString: string;
+};
 
 function hasAnyAdvancedFilters(params: URLSearchParams) {
   return Boolean(
@@ -58,6 +66,7 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
   const [topOnly, setTopOnly] = useState(searchParams.get('topOnly') === 'true');
   const [highlightedOnly, setHighlightedOnly] = useState(searchParams.get('highlightedOnly') === 'true');
   const [showAdvanced, setShowAdvanced] = useState(hasAnyAdvancedFilters(searchParams));
+  const [savedFilters, setSavedFilters] = useState<SavedFilter[]>([]);
 
   const createQueryString = useCallback(
     (params: Record<string, string | null>) => {
@@ -75,6 +84,28 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
     },
     [searchParams]
   );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    try {
+      const stored = window.localStorage.getItem(SAVED_FILTERS_KEY);
+      if (stored) {
+        setSavedFilters(JSON.parse(stored));
+      }
+    } catch {
+      setSavedFilters([]);
+    }
+  }, []);
+
+  const persistSavedFilters = useCallback((nextFilters: SavedFilter[]) => {
+    setSavedFilters(nextFilters);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(SAVED_FILTERS_KEY, JSON.stringify(nextFilters));
+    }
+  }, []);
 
   const minPriceValue = useMemo(() => clampPrice(parsePrice(minPrice), 0, safeMaxPriceCap), [minPrice, safeMaxPriceCap]);
   const maxPriceValue = useMemo(() => {
@@ -135,6 +166,64 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
     topOnly ||
     highlightedOnly;
 
+  const saveCurrentFilter = () => {
+    const normalizedMin = minPriceValue > 0 ? String(minPriceValue) : '';
+    const normalizedMax = maxPriceValue < safeMaxPriceCap ? String(maxPriceValue) : '';
+
+    const queryString = createQueryString({
+      location,
+      type: propertyType,
+      minPrice: normalizedMin,
+      maxPrice: normalizedMax,
+      shareSize,
+      occupancy,
+      status: listingStatus,
+      valuation: valuationAvailability,
+      opportunity: opportunityType,
+      topOnly: topOnly ? 'true' : '',
+      highlightedOnly: highlightedOnly ? 'true' : '',
+    });
+
+    if (!queryString) {
+      return;
+    }
+
+    const suggestedName = [
+      location || 'Trh',
+      propertyType || 'všechny typy',
+      shareSize || '',
+      opportunityType || '',
+    ]
+      .filter(Boolean)
+      .slice(0, 3)
+      .join(' • ');
+
+    const name = window.prompt('Název hlídacího filtru', suggestedName || 'Uložený filtr');
+
+    if (!name) {
+      return;
+    }
+
+    const nextFilters = [
+      {
+        id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}`,
+        name: name.trim(),
+        queryString,
+      },
+      ...savedFilters.filter((filter) => filter.queryString !== queryString),
+    ].slice(0, 6);
+
+    persistSavedFilters(nextFilters);
+  };
+
+  const applySavedFilter = (queryString: string) => {
+    router.push(`${pathname}?${queryString}`);
+  };
+
+  const removeSavedFilter = (id: string) => {
+    persistSavedFilters(savedFilters.filter((filter) => filter.id !== id));
+  };
+
   return (
     <form className={styles.filterForm} onSubmit={handleApplyFilters}>
       <div className={styles.headerRow}>
@@ -148,6 +237,41 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
           </button>
         )}
       </div>
+
+      <div className={styles.savedFiltersBar}>
+        <div>
+          <p className={styles.savedFiltersTitle}>Uložené filtry a hlídací psi</p>
+          <p className={styles.savedFiltersText}>Uložte si vlastní kombinaci filtrů a vraťte se k ní jedním klikem.</p>
+        </div>
+        <button
+          type="button"
+          onClick={saveCurrentFilter}
+          className={styles.saveFilterButton}
+          disabled={!hasFilters}
+        >
+          Uložit aktuální filtr
+        </button>
+      </div>
+
+      {savedFilters.length > 0 && (
+        <div className={styles.savedFiltersList}>
+          {savedFilters.map((filter) => (
+            <div key={filter.id} className={styles.savedFilterChip}>
+              <button type="button" onClick={() => applySavedFilter(filter.queryString)} className={styles.savedFilterLink}>
+                {filter.name}
+              </button>
+              <button
+                type="button"
+                onClick={() => removeSavedFilter(filter.id)}
+                className={styles.savedFilterRemove}
+                aria-label={`Smazat filtr ${filter.name}`}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className={styles.section}>
         <div className={styles.filterGroup}>

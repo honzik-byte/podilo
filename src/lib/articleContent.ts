@@ -14,6 +14,40 @@ export interface Article {
 
 export const articles: Article[] = [
   {
+    slug: 'nejcastejsi-chyby-pri-prodeji-podilu',
+    title: 'Nejčastější chyby při prodeji podílu',
+    excerpt: 'Přehled chyb, kvůli kterým se nabídka zbytečně prodlužuje, působí nedůvěryhodně nebo nepřitahuje správné zájemce.',
+    category: 'Pro prodávající',
+    readTime: '6 min',
+    seoDescription: 'Nejčastější chyby při prodeji spoluvlastnického podílu a jak připravit nabídku tak, aby byla srozumitelná a důvěryhodná.',
+    sections: [
+      {
+        heading: 'Nejasná cena a málo kontextu',
+        paragraphs: [
+          'Jedna z nejčastějších chyb je uvést jen částku bez vysvětlení, zda jde o cenu za nabízený podíl nebo odhad celé nemovitosti. Kupující pak musí základní logiku domýšlet sám a často ztrácí důvěru ještě před prvním kontaktem.',
+          'Stejně problematické je, když nabídka neříká nic o obsazenosti, důvodu prodeje nebo vztahu ostatních spoluvlastníků k dalšímu řešení situace.'
+        ],
+        bullets: [
+          'Oddělte cenu za podíl od odhadu ceny celé nemovitosti.',
+          'Uveďte velikost podílu, obsazenost a důvod prodeje.',
+          'Nenechávejte klíčové informace až na telefonát.'
+        ]
+      },
+      {
+        heading: 'Podceněné fotografie a slabý popis',
+        paragraphs: [
+          'I u podílu rozhoduje první dojem. Nekvalitní fotky, jedna rozmazaná fotografie nebo strohý popis bez kontextu zbytečně snižují počet relevantních reakcí.',
+          'Dobře zpracovaný inzerát neznamená marketingové fráze. Stačí přesnost, srozumitelnost a základní fakta, podle kterých kupující pozná, že nabídka stojí za pozornost.'
+        ],
+        bullets: [
+          'Přidejte více fotografií a jednu jasnou titulní fotku.',
+          'Vysvětlete, proč může být nabídka zajímavá právě pro investora nebo spoluvlastníka.',
+          'Doplňte lokalitu, stav nemovitosti a to, co je pro další rozhodování podstatné.'
+        ]
+      }
+    ]
+  },
+  {
     slug: 'co-je-spoluvlastnicky-podil-nemovitosti',
     title: 'Co je spoluvlastnický podíl nemovitosti?',
     excerpt: 'Základní vysvětlení, co přesně kupujete nebo prodáváte a proč je důležité rozlišovat podíl od konkrétní části nemovitosti.',

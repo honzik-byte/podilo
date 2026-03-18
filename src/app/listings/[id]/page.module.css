@@ -398,6 +398,19 @@
 }
 
 @media (max-width: 720px) {
+  .page {
+    padding-bottom: 3.5rem;
+  }
+
+  .breadcrumb {
+    padding: 1.25rem 0 0.85rem;
+  }
+
+  .mainColumn,
+  .sidebar {
+    gap: 1rem;
+  }
+
   .heroCard,
   .section,
   .priceCard,
@@ -408,6 +421,7 @@
 
   .heroHeader {
     flex-direction: column;
+    gap: 0.85rem;
   }
 
   .infoGrid {
@@ -424,5 +438,13 @@
 
   .priceSummaryList div {
     flex-direction: column;
+  }
+
+  .phoneBox {
+    margin-bottom: 0.95rem;
+  }
+
+  .contactSubtitle {
+    margin-bottom: 0.95rem;
   }
 }

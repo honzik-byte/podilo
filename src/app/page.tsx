@@ -10,7 +10,28 @@ import styles from './page.module.css';
 
 export const revalidate = 0;
 
-const articleHighlights = articles.slice(0, 3);
+const articleHighlights = [
+  'nejcastejsi-chyby-pri-prodeji-podilu',
+  'jak-prodat-podil-na-nemovitosti',
+  'na-co-si-dat-pozor-pri-koupi-podilu',
+]
+  .map((slug) => articles.find((article) => article.slug === slug))
+  .filter((article): article is NonNullable<typeof article> => Boolean(article));
+
+const commonBuyerQuestions = [
+  {
+    question: 'Jak poznám, jestli je cena podílu realistická?',
+    answer: 'Sledujte rozdíl mezi cenou za nabízený podíl, odhadem ceny celé nemovitosti a popisem situace. Podobná cena bez kontextu nestačí.',
+  },
+  {
+    question: 'Je Podilo realitní kancelář nebo zprostředkovatel?',
+    answer: 'Ne. Podilo funguje jako specializované tržiště. Zájemce a prodávající se propojují napřímo a další kroky řeší mezi sebou.',
+  },
+  {
+    question: 'Co si ověřit ještě před prvním kontaktem?',
+    answer: 'Velikost podílu, obsazenost, odhad ceny celé nemovitosti, důvod prodeje a jestli inzerát dává jasný smysl i bez dovysvětlování po telefonu.',
+  },
+];
 
 export default async function Home() {
   const [allListings, { regions, propertyTypes }] = await Promise.all([
@@ -105,6 +126,71 @@ export default async function Home() {
         <WhyRegisterCard title="Uložte si zajímavé nabídky a vraťte se k nim později" />
       </section>
 
+      <section className={`container ${styles.trustSection}`}>
+        <div className={styles.sectionHeaderSimple}>
+          <div>
+            <p className={styles.sectionEyebrow}>Důvěra a ověření</p>
+            <h2 className={styles.sectionTitle}>Jasně oddělujeme roli platformy, ověření kontaktu a samotný obchod</h2>
+          </div>
+        </div>
+
+        <div className={styles.trustGrid}>
+          <div className={styles.trustCard}>
+            <strong>Ověřený kontakt</strong>
+            <p>U vybraných nabídek ověřujeme, že kontakt patří skutečnému zadavateli nabídky. Neznamená to právní garanci transakce, ale silnější důvěryhodnost inzerátu.</p>
+          </div>
+          <div className={styles.trustCard}>
+            <strong>Přímý kontakt bez prostředníka</strong>
+            <p>Zájemce komunikuje přímo s prodávajícím. Podilo nepřebírá roli makléře, nevyjednává za strany a nezasahuje do podmínek dohody.</p>
+          </div>
+          <div className={styles.trustCard}>
+            <strong>Podilo jako specializované tržiště</strong>
+            <p>Soustředíme se na srozumitelnost ceny podílu, kontext nabídky a lepší orientaci na trhu se spoluvlastnickými podíly.</p>
+          </div>
+        </div>
+      </section>
+
+      {propertyTypes.length > 0 && (
+        <section className={`container ${styles.propertySection}`}>
+          <div className={styles.sectionHeader}>
+            <div>
+              <p className={styles.sectionEyebrow}>Podle typu nemovitosti</p>
+              <h2 className={styles.sectionTitle}>Rychlý vstup do typu nabídky, který právě řešíte</h2>
+            </div>
+            <Link href="/listings" className={styles.viewAll}>
+              Otevřít marketplace →
+            </Link>
+          </div>
+
+          <div className={styles.typeGrid}>
+            {propertyTypes.slice(0, 4).map((propertyType) => (
+              <Link key={propertyType.slug} href={`/typ-nemovitosti/${propertyType.slug}`} className={styles.typeCard}>
+                <span>{propertyType.label}</span>
+                <strong>{propertyType.count} aktivních nabídek</strong>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className={`container ${styles.faqSection}`}>
+        <div className={styles.sectionHeaderSimple}>
+          <div>
+            <p className={styles.sectionEyebrow}>Co kupující řeší nejčastěji</p>
+            <h2 className={styles.sectionTitle}>Krátké odpovědi na otázky, které rozhodují o prvním kontaktu</h2>
+          </div>
+        </div>
+
+        <div className={styles.faqGrid}>
+          {commonBuyerQuestions.map((item) => (
+            <div key={item.question} className={styles.faqCard}>
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className={`container ${styles.educationSection}`}>
         <div className={styles.sectionHeader}>
           <div>
@@ -156,6 +242,21 @@ export default async function Home() {
             ))}
           </div>
         )}
+      </section>
+
+      <section className={`container ${styles.investorSection}`}>
+        <div className={styles.investorCard}>
+          <div>
+            <p className={styles.sectionEyebrow}>Pro aktivní investory</p>
+            <h2 className={styles.sectionTitle}>Investor Pro připravujeme, ale dáváme mu realistický tvar</h2>
+            <p className={styles.sectionText}>
+              Nechceme generický subscription box. Připravujeme uložená hledání, alerty, watchlist a další nástroje, které dávají smysl jen těm, kdo sledují trh pravidelně.
+            </p>
+          </div>
+          <Link href="/premium">
+            <Button variant="outline">Co připravujeme</Button>
+          </Link>
+        </div>
       </section>
     </div>
   );
