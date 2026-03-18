@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { activatePromotionFromSession } from '@/lib/promotionActivation';
+import { activatePromotionWithUserAccessToken } from '@/lib/promotionActivation';
 import { reportError } from '@/lib/errorReporting';
-import { createServerSupabaseAuth, createServerSupabaseUser } from '@/lib/serverSupabase';
+import { createServerSupabaseAuth } from '@/lib/serverSupabase';
 import { getStripeClient } from '@/lib/stripeServer';
 
 export async function POST(request: Request) {
@@ -40,9 +40,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Tato platba nepatří přihlášenému uživateli.' }, { status: 403 });
     }
 
-    const result = await activatePromotionFromSession(session, {
-      listingClient: createServerSupabaseUser(token),
-    });
+    const result = await activatePromotionWithUserAccessToken(session, token);
 
     return NextResponse.json({ ok: true, result });
   } catch (error) {
