@@ -2,11 +2,11 @@
   "crons": [
     {
       "path": "/api/jobs/promotions/expire",
-      "schedule": "0 * * * *"
+      "schedule": "0 6 * * *"
     },
     {
       "path": "/api/jobs/notifications",
-      "schedule": "15 * * * *"
+      "schedule": "15 6 * * *"
     }
   ]
 }
