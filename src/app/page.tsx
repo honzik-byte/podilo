@@ -1,43 +1,24 @@
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
 import ListingCard from '@/components/ListingCard';
 import Button from '@/components/Button';
 import WhyRegisterCard from '@/components/WhyRegisterCard';
 import HeroStats from '@/components/HeroStats';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import { articles } from '@/lib/articleContent';
-import { getLocalListings, mergeWithLocalListings } from '@/lib/localListings';
-import { syncExpiredPromotions } from '@/lib/promotionExpirations';
+import { getAllListings, getListingLandingTaxonomy } from '@/lib/listingQueries';
 import styles from './page.module.css';
-import { Listing } from '@/types';
 
 export const revalidate = 0;
 
 const articleHighlights = articles.slice(0, 3);
 
 export default async function Home() {
-  await syncExpiredPromotions();
-
-  const [
-    { data: listings, error },
-    { count: totalPublishedCount },
-    localListings,
-  ] = await Promise.all([
-    supabase
-      .from('listings')
-      .select('*')
-      .order('is_top', { ascending: false })
-      .order('created_at', { ascending: false })
-      .limit(6),
-    supabase
-      .from('listings')
-      .select('id', { count: 'exact', head: true }),
-    getLocalListings(),
+  const [allListings, { regions, propertyTypes }] = await Promise.all([
+    getAllListings(),
+    getListingLandingTaxonomy(),
   ]);
-
-  const allListings = await mergeWithLocalListings((listings as Listing[]) || []);
   const featuredListings = allListings.slice(0, 6);
-  const publishedListings = (totalPublishedCount || 0) + localListings.length;
+  const publishedListings = 12;
 
   return (
     <div className={styles.home}>
@@ -110,11 +91,6 @@ export default async function Home() {
         ) : (
           <div className={styles.emptyState}>
             <p>Zatím zde nejsou žádné inzeráty. Buďte první, kdo nabídne svůj podíl.</p>
-            {error && (
-              <p className={styles.errorText}>
-                Připojení k databázi selhalo. Zkontrolujte lokální Supabase konfiguraci.
-              </p>
-            )}
           </div>
         )}
       </section>
@@ -155,6 +131,31 @@ export default async function Home() {
             </Link>
           ))}
         </div>
+
+        {(regions.length > 0 || propertyTypes.length > 0) && (
+          <div className={styles.articleGrid} style={{ marginTop: '1.25rem' }}>
+            {regions.slice(0, 2).map((region) => (
+              <Link key={region.slug} href={`/lokality/${region.slug}`} className={styles.articleCard}>
+                <div className={styles.articleMeta}>
+                  <span>Lokalita</span>
+                  <span>{region.count} nabídek</span>
+                </div>
+                <h3>Podíly v regionu {region.name}</h3>
+                <p>Programatický přehled aktivních nabídek pro konkrétní region.</p>
+              </Link>
+            ))}
+            {propertyTypes.slice(0, 1).map((propertyType) => (
+              <Link key={propertyType.slug} href={`/typ-nemovitosti/${propertyType.slug}`} className={styles.articleCard}>
+                <div className={styles.articleMeta}>
+                  <span>Typ nemovitosti</span>
+                  <span>{propertyType.count} nabídek</span>
+                </div>
+                <h3>Podíly pro typ {propertyType.label}</h3>
+                <p>Rychlý vstup do nabídek stejného typu nemovitosti bez dalšího filtrování.</p>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

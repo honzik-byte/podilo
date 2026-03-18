@@ -20,6 +20,88 @@
   margin-bottom: 2rem;
 }
 
+.commerceStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.commerceStatCard {
+  padding: 1rem 1.05rem;
+  border-radius: 1.1rem;
+  border: 1px solid var(--border);
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+}
+
+.commerceStatCard span {
+  display: block;
+  color: var(--muted-text);
+  font-size: 0.84rem;
+  margin-bottom: 0.4rem;
+}
+
+.commerceStatCard strong {
+  font-size: 1.7rem;
+  letter-spacing: -0.04em;
+}
+
+.commerceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.commercePanel {
+  padding: 1.1rem;
+  border-radius: 1.1rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+}
+
+.commercePanel h3 {
+  margin-bottom: 0.9rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.timelineList {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.timelineItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #efeff2;
+}
+
+.timelineItem:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.timelineItem p,
+.timelineMeta {
+  color: var(--muted-text);
+  font-size: 0.9rem;
+}
+
+.timelineMeta {
+  display: grid;
+  gap: 0.2rem;
+  text-align: right;
+}
+
+.emptyText {
+  color: var(--muted-text);
+}
+
 .sectionHeader {
   margin-bottom: 1rem;
 }

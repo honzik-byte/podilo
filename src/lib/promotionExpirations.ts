@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { createAuditLog } from '@/lib/auditLogs';
 import { createServerSupabaseAdmin } from '@/lib/serverSupabase';
 
 export async function syncExpiredPromotions() {
@@ -63,6 +64,27 @@ export async function syncExpiredPromotions() {
     }
 
     expiredCount += 1;
+
+    if (resetPayload.is_top === false || resetPayload.is_highlighted === false) {
+      await adminClient
+        .from('listing_promotions')
+        .update({
+          status: 'expired',
+        })
+        .eq('listing_id', listing.id)
+        .eq('status', 'active')
+        .lte('ends_at', nowIso);
+
+      await createAuditLog({
+        entityType: 'listing',
+        entityId: listing.id,
+        action: 'promotion_expired',
+        payload: {
+          resetPayload,
+          nowIso,
+        },
+      });
+    }
 
     console.info('[StripePromotion] Promotion expired and reset', {
       listingId: listing.id,

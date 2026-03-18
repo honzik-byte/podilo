@@ -23,6 +23,12 @@ export default function ListingCard({ listing }: ListingCardProps) {
   const opportunityType = getOpportunityType(parsed.details);
   const energyClass = getEnergyClass(listing, parsed.details);
   const verification = getVerificationDetails(listing);
+  const promotionEndsAt = listing.top_until || listing.highlighted_until;
+  const promotionLabel = listing.is_top
+    ? 'TOP do'
+    : listing.is_highlighted
+      ? 'Zvýraznění do'
+      : null;
 
   return (
     <article className={styles.card}>
@@ -44,6 +50,11 @@ export default function ListingCard({ listing }: ListingCardProps) {
           {listing.is_top && <span className={styles.topBadge}>TOP nabídka</span>}
           {listing.is_highlighted && <span className={styles.highlightBadge}>Zvýrazněno</span>}
           {verification.verified && <span className={styles.verifiedBadge}>Ověřený inzerent</span>}
+          {promotionLabel && promotionEndsAt && (
+            <span className={styles.expiryBadge}>
+              {promotionLabel} {new Date(promotionEndsAt).toLocaleDateString('cs-CZ')}
+            </span>
+          )}
         </div>
 
         <FavoriteButton listingId={listing.id} />

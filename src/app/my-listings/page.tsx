@@ -145,6 +145,12 @@ export default function MyListingsPage() {
                   <p className={styles.panelText}>
                     Když chceš víc zobrazení nebo rychlejší reakce, zapni na 7 dní TOP pozici nebo zvýraznění.
                   </p>
+                  {(listing.top_until || listing.highlighted_until) && (
+                    <p className={styles.promotionEnds}>
+                      Aktivní do{' '}
+                      {new Date(listing.top_until || listing.highlighted_until || '').toLocaleDateString('cs-CZ')}
+                    </p>
+                  )}
                   <div className={styles.metaActions}>
                     <Link href={`/cenik?listing=${listing.id}`} className={styles.secondaryLink}>
                       Zviditelnit

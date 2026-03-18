@@ -1,7 +1,7 @@
 import 'server-only';
 
-import { promises as fs } from 'fs';
-import path from 'path';
+import { createServerSupabaseAdmin } from '@/lib/serverSupabase';
+import { isDatabaseListingId } from '@/lib/listingIds';
 
 export type ListingAnalyticsEvent = 'detail_view' | 'phone_click' | 'share_click' | 'lead_submit';
 
@@ -13,10 +13,6 @@ export interface ListingAnalyticsRecord {
   viewers: string[];
 }
 
-type AnalyticsMap = Record<string, ListingAnalyticsRecord>;
-
-const analyticsPath = path.join(process.cwd(), 'src/data/listingAnalytics.json');
-
 function createEmptyRecord(): ListingAnalyticsRecord {
   return {
     detailViews: 0,
@@ -27,48 +23,79 @@ function createEmptyRecord(): ListingAnalyticsRecord {
   };
 }
 
-async function readAnalyticsMap() {
-  const content = await fs.readFile(analyticsPath, 'utf8');
-  return JSON.parse(content) as AnalyticsMap;
-}
-
-async function writeAnalyticsMap(data: AnalyticsMap) {
-  await fs.writeFile(analyticsPath, JSON.stringify(data, null, 2), 'utf8');
-}
-
 export async function getListingAnalytics(listingId: string) {
-  const analytics = await readAnalyticsMap();
-  return analytics[listingId] || createEmptyRecord();
+  if (!isDatabaseListingId(listingId)) {
+    return createEmptyRecord();
+  }
+
+  const adminClient = createServerSupabaseAdmin();
+  const { data, error } = await adminClient
+    .from('listing_events')
+    .select('event_type, visitor_id')
+    .eq('listing_id', listingId);
+
+  if (error) {
+    console.error('[ListingAnalytics] Failed to load listing analytics', { listingId, error });
+    return createEmptyRecord();
+  }
+
+  const record = createEmptyRecord();
+
+  for (const event of data || []) {
+    if (event.event_type === 'detail_view') {
+      record.detailViews += 1;
+      if (event.visitor_id && !record.viewers.includes(event.visitor_id)) {
+        record.viewers.push(event.visitor_id);
+      }
+    }
+
+    if (event.event_type === 'phone_click') {
+      record.phoneClicks += 1;
+    }
+
+    if (event.event_type === 'share_click') {
+      record.shareClicks += 1;
+    }
+
+    if (event.event_type === 'lead_submit') {
+      record.leadSubmissions += 1;
+    }
+  }
+
+  return record;
 }
 
 export async function trackListingEvent(listingId: string, event: ListingAnalyticsEvent, visitorId?: string) {
-  const analytics = await readAnalyticsMap();
-  const current = analytics[listingId] || createEmptyRecord();
+  if (!isDatabaseListingId(listingId)) {
+    return createEmptyRecord();
+  }
 
-  if (event === 'detail_view') {
-    if (visitorId && current.viewers.includes(visitorId)) {
-      return current;
+  const adminClient = createServerSupabaseAdmin();
+
+  if (event === 'detail_view' && visitorId) {
+    const { data: existingView } = await adminClient
+      .from('listing_events')
+      .select('id')
+      .eq('listing_id', listingId)
+      .eq('event_type', 'detail_view')
+      .eq('visitor_id', visitorId)
+      .limit(1)
+      .maybeSingle();
+
+    if (existingView) {
+      return getListingAnalytics(listingId);
     }
-
-    current.detailViews += 1;
-    if (visitorId) {
-      current.viewers.push(visitorId);
-    }
   }
 
-  if (event === 'phone_click') {
-    current.phoneClicks += 1;
+  const { error } = await adminClient.from('listing_events').insert({
+    listing_id: listingId,
+    event_type: event,
+    visitor_id: visitorId || null,
+  });
+
+  if (error) {
+    console.error('[ListingAnalytics] Failed to track listing event', { listingId, event, visitorId, error });
   }
 
-  if (event === 'share_click') {
-    current.shareClicks += 1;
-  }
-
-  if (event === 'lead_submit') {
-    current.leadSubmissions += 1;
-  }
-
-  analytics[listingId] = current;
-  await writeAnalyticsMap(analytics);
-  return current;
+  return getListingAnalytics(listingId);
 }

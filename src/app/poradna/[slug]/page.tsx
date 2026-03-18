@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { articles, getArticleBySlug, getRelatedArticles } from '@/lib/articleContent';
+import { getRelevantListingsForArticle } from '@/lib/listingQueries';
 import styles from './page.module.css';
 
 export async function generateStaticParams() {
@@ -34,9 +35,30 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   }
 
   const relatedArticles = getRelatedArticles(article.slug, 3);
+  const relatedListings = await getRelevantListingsForArticle(article, 3);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://podilo.cz';
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.seoDescription,
+    author: {
+      '@type': 'Organization',
+      name: 'Podilo',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Podilo',
+    },
+    mainEntityOfPage: `${baseUrl}/poradna/${article.slug}`,
+  };
 
   return (
     <article className={`container ${styles.page}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <Link href="/poradna" className={styles.backLink}>
         ← Zpět do Poradny
       </Link>
@@ -85,6 +107,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             {relatedArticles.map((relatedArticle) => (
               <Link key={relatedArticle.slug} href={`/poradna/${relatedArticle.slug}`} className={styles.relatedLink}>
                 {relatedArticle.title}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {relatedListings.length > 0 && (
+        <div className={styles.footerCard}>
+          <h3>Relevantní nabídky</h3>
+          <p>Konkrétní inzeráty, které tematicky navazují na článek a dávají rychlý přechod z obsahu do marketplace.</p>
+          <div className={styles.relatedLinks}>
+            {relatedListings.map((listing) => (
+              <Link key={listing.id} href={`/listings/${listing.id}`} className={styles.relatedLink}>
+                {listing.title}
               </Link>
             ))}
           </div>

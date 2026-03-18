@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import ListingDetailClient from '@/components/ListingDetailClient';
+import { parseListing } from '@/lib/listingMetadata';
 import { getListingById, getRelatedListings } from '@/lib/listingQueries';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
@@ -33,6 +34,31 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
   }
 
   const relatedListings = await getRelatedListings(listing, 3);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://podilo.cz';
+  const parsed = parseListing(listing);
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: listing.title,
+    description: parsed.description || `${listing.property_type}, podíl ${listing.share_size}, lokalita ${listing.location}`,
+    image: listing.images || [],
+    url: `${baseUrl}/listings/${listing.id}`,
+    category: 'Spoluvlastnický podíl nemovitosti',
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'CZK',
+      price: listing.price,
+      availability: 'https://schema.org/InStock',
+    },
+  };
 
-  return <ListingDetailClient listing={listing} relatedListings={relatedListings} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <ListingDetailClient listing={listing} relatedListings={relatedListings} />
+    </>
+  );
 }
