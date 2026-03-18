@@ -90,6 +90,7 @@ export default function ListingDetailClient({ listing, relatedListings }: Listin
   const supportEmail = 'podpora@podilo.cz';
   const quality = getListingQualityChecklist(listing);
   const verification = getVerificationDetails(listing);
+  const isOwner = Boolean(session?.user?.id && listing.user_id && session.user.id === listing.user_id);
   const formatDate = (value?: string | null) =>
     value
       ? new Intl.DateTimeFormat('cs-CZ', {
@@ -394,6 +395,12 @@ export default function ListingDetailClient({ listing, relatedListings }: Listin
                     : 'Kontakt vedený přes Podilo'}
                 </strong>
               </div>
+              {isOwner && (listing.top_until || listing.highlighted_until) && (
+                <div>
+                  <span className={styles.priceCardLabel}>Aktivní propagace do</span>
+                  <strong>{formatDate(listing.top_until || listing.highlighted_until)}</strong>
+                </div>
+              )}
             </div>
             <ShareListingActions title={listing.title} listingId={listing.id} />
           </div>
