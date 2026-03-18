@@ -24,11 +24,12 @@ export default function ListingCard({ listing }: ListingCardProps) {
   const energyClass = getEnergyClass(listing, parsed.details);
   const verification = getVerificationDetails(listing);
   const promotionEndsAt = listing.top_until || listing.highlighted_until;
-  const promotionLabel = listing.is_top
-    ? 'TOP do'
-    : listing.is_highlighted
-      ? 'Zvýraznění do'
-      : null;
+  const promotionLabel = promotionEndsAt
+    ? new Intl.DateTimeFormat('cs-CZ', {
+        day: 'numeric',
+        month: 'numeric',
+      }).format(new Date(promotionEndsAt))
+    : null;
 
   return (
     <article className={styles.card}>
@@ -52,7 +53,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
           {verification.verified && <span className={styles.verifiedBadge}>Ověřený inzerent</span>}
           {promotionLabel && promotionEndsAt && (
             <span className={styles.expiryBadge}>
-              {promotionLabel} {new Date(promotionEndsAt).toLocaleDateString('cs-CZ')}
+              Do {promotionLabel}
             </span>
           )}
         </div>
