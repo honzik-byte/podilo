@@ -1,12 +1,21 @@
 import type Stripe from 'stripe';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createAuditLog } from '@/lib/auditLogs';
 import { reportError } from '@/lib/errorReporting';
 import { upsertListingPromotion } from '@/lib/listingPromotions';
 import { enqueueNotificationJob } from '@/lib/notificationJobs';
 import { getPromotionPlan } from '@/lib/promotionPlans';
-import { createServerSupabaseAdmin } from '@/lib/serverSupabase';
+import { createServerSupabaseAdmin, hasServerSupabaseServiceRole } from '@/lib/serverSupabase';
 
-export async function activatePromotionFromSession(session: Stripe.Checkout.Session) {
+interface ActivatePromotionOptions {
+  listingClient?: SupabaseClient;
+  skipOps?: boolean;
+}
+
+export async function activatePromotionFromSession(
+  session: Stripe.Checkout.Session,
+  options: ActivatePromotionOptions = {}
+) {
   const listingId = session.metadata?.listing_id || session.client_reference_id;
   const promotionType = session.metadata?.promotion_type || session.metadata?.plan_id;
   const plan = getPromotionPlan(promotionType);
@@ -24,7 +33,8 @@ export async function activatePromotionFromSession(session: Stripe.Checkout.Sess
   }
 
   const adminClient = createServerSupabaseAdmin();
-  const { data: listing, error: listingError } = await adminClient
+  const listingClient = options.listingClient || adminClient;
+  const { data: listing, error: listingError } = await listingClient
     .from('listings')
     .select('id, title')
     .eq('id', listingId)
@@ -62,7 +72,7 @@ export async function activatePromotionFromSession(session: Stripe.Checkout.Sess
     highlighted_until: plan.apply.is_highlighted ? expiresAtIso : null,
   };
 
-  const { error: updateError } = await adminClient
+  const { error: updateError } = await listingClient
     .from('listings')
     .update({
       ...updatePayload,
@@ -88,37 +98,42 @@ export async function activatePromotionFromSession(session: Stripe.Checkout.Sess
     throw new Error(updateError.message);
   }
 
-  const promotionRecord = await upsertListingPromotion({
-    listingId,
-    userId: session.metadata?.user_id || null,
-    stripeSessionId: session.id,
-    stripePaymentIntentId:
-      typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id || null,
-    promotionType: plan.id,
-    status: 'active',
-    amountCzk: typeof session.amount_total === 'number' ? Math.round(session.amount_total / 100) : null,
-    startsAt: activatedAt.toISOString(),
-    endsAt: expiresAtIso,
-    paidAt: paidAtIso,
-    metadata: session.metadata || {},
-  });
+  const allowOps = !options.skipOps && hasServerSupabaseServiceRole();
+  let promotionRecord: Awaited<ReturnType<typeof upsertListingPromotion>> | null = null;
 
-  await createAuditLog({
-    actorUserId: session.metadata?.user_id || null,
-    entityType: 'listing',
-    entityId: listingId,
-    action: 'promotion_activated',
-    payload: {
-      sessionId: session.id,
+  if (allowOps) {
+    promotionRecord = await upsertListingPromotion({
+      listingId,
+      userId: session.metadata?.user_id || null,
+      stripeSessionId: session.id,
+      stripePaymentIntentId:
+        typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id || null,
       promotionType: plan.id,
-      promotionId: promotionRecord?.id || null,
-      updatePayload,
-    },
-  });
+      status: 'active',
+      amountCzk: typeof session.amount_total === 'number' ? Math.round(session.amount_total / 100) : null,
+      startsAt: activatedAt.toISOString(),
+      endsAt: expiresAtIso,
+      paidAt: paidAtIso,
+      metadata: session.metadata || {},
+    });
+
+    await createAuditLog({
+      actorUserId: session.metadata?.user_id || null,
+      entityType: 'listing',
+      entityId: listingId,
+      action: 'promotion_activated',
+      payload: {
+        sessionId: session.id,
+        promotionType: plan.id,
+        promotionId: promotionRecord?.id || null,
+        updatePayload,
+      },
+    });
+  }
 
   const recipientEmail = session.customer_details?.email;
 
-  if (recipientEmail) {
+  if (recipientEmail && allowOps) {
     await enqueueNotificationJob({
       type: 'promotion_activated',
       userId: session.metadata?.user_id || null,
@@ -166,6 +181,7 @@ export async function activatePromotionFromSession(session: Stripe.Checkout.Sess
     listingId,
     updatePayload,
     listingTitle: listing.title,
+    allowOps,
   });
 
   return {

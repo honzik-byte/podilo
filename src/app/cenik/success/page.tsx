@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { activatePromotionFromSession } from '@/lib/promotionActivation';
-import { getStripeClient } from '@/lib/stripeServer';
+import SuccessActivation from './SuccessActivation';
 import styles from '../page.module.css';
 
 interface SuccessPageProps {
@@ -22,38 +21,5 @@ export default async function PricingSuccessPage({ searchParams }: SuccessPagePr
     );
   }
 
-  try {
-    const stripe = getStripeClient();
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const result = await activatePromotionFromSession(session);
-
-    return (
-      <div className="container">
-        <div className={styles.statusCard}>
-          <p className={styles.statusEyebrow}>Platba dokončena</p>
-          <h1>{result.plan.title} je aktivní</h1>
-          <p>
-            Inzerát <strong>{result.listingTitle || 'vybraná nabídka'}</strong> má nyní zapnuté zvýšení viditelnosti.
-            Změna se propíše do výpisu po nejbližším načtení stránky.
-          </p>
-          <div className={styles.statusActions}>
-            <Link href="/my-listings" className={styles.primaryLink}>Zpět do mých inzerátů</Link>
-            <Link href={`/listings/${result.listingId}`} className={styles.secondaryLink}>Otevřít detail nabídky</Link>
-          </div>
-        </div>
-      </div>
-    );
-  } catch (error) {
-    return (
-      <div className="container">
-        <div className={styles.statusCard}>
-          <h1>Platbu se nepodařilo potvrdit</h1>
-          <p>
-            {error instanceof Error ? error.message : 'Zkuste stránku obnovit nebo se vraťte do ceníku.'}
-          </p>
-          <Link href="/cenik" className={styles.inlineLink}>Zpět na ceník</Link>
-        </div>
-      </div>
-    );
-  }
+  return <SuccessActivation sessionId={sessionId} />;
 }
