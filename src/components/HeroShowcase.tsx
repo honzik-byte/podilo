@@ -115,11 +115,14 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
               fallbackSrc={fallbackImage}
             />
             <div className={styles.imageOverlay} style={imageStyle} />
+            <div className={styles.imageBadgeWrap}>
+              <span className={styles.badge}>{getHeroLabel(active)}</span>
+            </div>
           </div>
 
           <div className={styles.cardBody}>
             <div className={styles.cardHeader}>
-              <span className={styles.badge}>{getHeroLabel(active)}</span>
+              <div className={styles.location}>{active.location} • {active.property_type}</div>
               <div className={styles.tabs}>
                 {showcaseListings.map((listing, index) => (
                   <button
@@ -133,7 +136,6 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
               </div>
             </div>
 
-            <div className={styles.location}>{active.location} • {active.property_type}</div>
             <h3 className={styles.title}>{active.title}</h3>
 
             <div className={styles.priceBlock}>
