@@ -15,7 +15,9 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at top center, rgba(226, 232, 240, 0.85), transparent 42%),
+    radial-gradient(circle at top center, rgba(226, 232, 240, 0.92), transparent 38%),
+    radial-gradient(circle at 78% 26%, rgba(219, 234, 254, 0.75), transparent 24%),
+    radial-gradient(circle at 62% 78%, rgba(241, 245, 249, 0.82), transparent 30%),
     linear-gradient(180deg, #fcfcfd 0%, #f6f8fb 100%);
   border-bottom: 1px solid var(--border);
 }
@@ -26,9 +28,9 @@
 
 .heroContent {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
-  gap: 2rem;
-  align-items: start;
+  grid-template-columns: minmax(0, 1.02fr) minmax(340px, 0.98fr);
+  gap: 2.4rem;
+  align-items: center;
   padding-bottom: 4rem;
 }
 
@@ -67,6 +69,28 @@
   margin-top: 2.25rem;
 }
 
+.heroQuickNotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.15rem;
+}
+
+.heroQuickNotes span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.2rem;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(10px);
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 .heroAside {
   display: flex;
 }
@@ -75,6 +99,10 @@
   display: grid;
   gap: 1rem;
   width: 100%;
+}
+
+.heroEchoSection {
+  margin-top: -2.25rem;
 }
 
 .proofCard,
@@ -96,7 +124,7 @@
 }
 
 .proofSection {
-  margin-top: -0.75rem;
+  margin-top: -0.15rem;
 }
 
 .proofGrid {
@@ -310,6 +338,10 @@
     max-width: none;
   }
 
+  .heroEchoSection {
+    margin-top: -1rem;
+  }
+
   .investorCard {
     flex-direction: column;
     align-items: flex-start;
@@ -327,6 +359,16 @@
 
   .heroContent {
     padding-bottom: 3rem;
+  }
+
+  .heroQuickNotes {
+    gap: 0.6rem;
+  }
+
+  .heroQuickNotes span {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 
   .heroCard,

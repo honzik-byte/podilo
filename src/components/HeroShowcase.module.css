@@ -1,0 +1,270 @@
+.wrap {
+  position: relative;
+}
+
+.orb {
+  position: absolute;
+  inset: 12% 10% auto auto;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(203, 213, 225, 0.55) 0%, rgba(203, 213, 225, 0) 70%);
+  pointer-events: none;
+  filter: blur(8px);
+}
+
+.surface {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 0 0 1.25rem;
+}
+
+.floatingTop,
+.floatingBottom {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.floatingTop {
+  justify-content: flex-end;
+  padding-right: 1rem;
+}
+
+.signal,
+.signalMuted,
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(12px);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.signal::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.45rem;
+  border-radius: 999px;
+  background: #16a34a;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.35);
+  animation: pulse 1.9s infinite;
+}
+
+.signalMuted {
+  color: var(--muted-text);
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  padding: 1.45rem;
+  border-radius: 1.75rem;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 250, 252, 0.95) 100%);
+  box-shadow:
+    0 22px 55px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: auto -8% -30% 30%;
+  height: 11rem;
+  background: radial-gradient(circle, rgba(191, 219, 254, 0.32) 0%, rgba(191, 219, 254, 0) 72%);
+  pointer-events: none;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.tab {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 999px;
+  border: none;
+  background: rgba(148, 163, 184, 0.38);
+  cursor: pointer;
+}
+
+.tabActive {
+  width: 1.75rem;
+  background: #111827;
+}
+
+.location {
+  color: var(--muted-text);
+  font-size: 0.94rem;
+}
+
+.title {
+  font-size: clamp(1.45rem, 2.3vw, 1.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  max-width: 12ch;
+}
+
+.priceBlock {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.priceLabel {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+}
+
+.price {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.chip {
+  min-height: 2.1rem;
+}
+
+.insight {
+  max-width: 34ch;
+  color: #334155;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.floatingBottom {
+  justify-content: flex-start;
+  margin-left: 1.25rem;
+}
+
+.miniCard {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 11rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+  backdrop-filter: blur(12px);
+  animation: drift 6.5s ease-in-out infinite;
+}
+
+.miniCard:last-child {
+  animation-delay: 1.3s;
+}
+
+.miniCard strong {
+  font-size: 0.92rem;
+}
+
+.miniCard span {
+  color: var(--muted-text);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.35);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(22, 163, 74, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .surface {
+    padding: 0.75rem 0 0;
+  }
+
+  .floatingTop {
+    justify-content: flex-start;
+    padding-right: 0;
+  }
+
+  .floatingBottom {
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 720px) {
+  .card {
+    padding: 1.15rem;
+    border-radius: 1.35rem;
+  }
+
+  .cardHeader,
+  .floatingTop {
+    flex-wrap: wrap;
+  }
+
+  .title {
+    max-width: none;
+  }
+
+  .price {
+    font-size: 2.2rem;
+  }
+
+  .miniCard {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+}
