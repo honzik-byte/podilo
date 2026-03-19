@@ -65,6 +65,24 @@
   transition: transform 0.18s ease-out;
 }
 
+.cardHighlighted {
+  border-color: #e2d1b1;
+  background:
+    linear-gradient(180deg, rgba(255, 249, 238, 0.98) 0%, rgba(255, 252, 247, 0.96) 22%, #ffffff 54%, #ffffff 100%);
+  box-shadow:
+    0 16px 36px rgba(15, 23, 42, 0.07),
+    0 0 0 1px rgba(208, 180, 120, 0.14);
+}
+
+.cardTop {
+  border-color: #cfd6e2;
+  background:
+    linear-gradient(180deg, rgba(247, 249, 252, 0.98) 0%, #ffffff 24%, #ffffff 100%);
+  box-shadow:
+    0 18px 38px rgba(15, 23, 42, 0.09),
+    0 0 0 1px rgba(17, 24, 39, 0.08);
+}
+
 .imageShell {
   position: relative;
   aspect-ratio: 3 / 2;
@@ -113,6 +131,12 @@
   color: #fff;
   font-size: 0.82rem;
   font-weight: 700;
+}
+
+.cardHighlighted .badge {
+  background: rgba(255, 248, 235, 0.98);
+  color: #8a5a11;
+  border: 1px solid rgba(214, 170, 82, 0.24);
 }
 
 .imageBadgeWrap {
@@ -164,6 +188,16 @@
   white-space: nowrap;
 }
 
+.cardTop .type {
+  background: rgba(244, 247, 251, 0.96);
+  border-color: #e0e6ee;
+}
+
+.cardHighlighted .type {
+  background: rgba(255, 249, 239, 0.96);
+  border-color: #eee1c9;
+}
+
 .title {
   font-size: 1.2rem;
   font-weight: 800;
@@ -178,6 +212,14 @@
   margin-top: auto;
   padding-top: 1rem;
   border-top: 1px solid #efeff2;
+}
+
+.cardTop .priceBlock {
+  border-top-color: #e2e8f0;
+}
+
+.cardHighlighted .priceBlock {
+  border-top-color: #eadfc9;
 }
 
 .priceLabel {
@@ -220,6 +262,18 @@
   color: var(--muted-text);
 }
 
+.cardTop .chip,
+.cardTop .chipMuted {
+  background: rgba(244, 247, 251, 0.96);
+  border-color: #e0e6ee;
+}
+
+.cardHighlighted .chip,
+.cardHighlighted .chipMuted {
+  background: rgba(255, 249, 239, 0.96);
+  border-color: #eee1c9;
+}
+
 .secondaryPrice {
   display: flex;
   justify-content: space-between;
@@ -234,6 +288,16 @@
   font-size: 1rem;
 }
 
+.cardTop .secondaryPrice,
+.cardTop .priceLabel {
+  color: #5b6472;
+}
+
+.cardHighlighted .secondaryPrice,
+.cardHighlighted .priceLabel {
+  color: #7b6643;
+}
+
 .insight {
   margin-top: 0.9rem;
   padding-top: 0.9rem;
@@ -242,6 +306,14 @@
   font-size: 0.88rem;
   line-height: 1.5;
   min-height: 4.5rem;
+}
+
+.cardTop .insight {
+  border-top-color: #d8e0ea;
+}
+
+.cardHighlighted .insight {
+  border-top-color: #e2d1ae;
 }
 
 @keyframes pulse {

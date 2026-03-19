@@ -3,6 +3,7 @@
 import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import type { Listing } from '@/types';
 import ClientImage from '@/components/ClientImage';
+import FavoriteButton from '@/components/FavoriteButton';
 import {
   formatPrice,
   getDiscountLabel,
@@ -115,7 +116,16 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
           <span className={styles.signal}>Živé tržiště</span>
         </div>
 
-        <div className={styles.card} style={cardStyle}>
+        <div
+          className={[
+            styles.card,
+            active.is_top ? styles.cardTop : '',
+            active.is_highlighted ? styles.cardHighlighted : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          style={cardStyle}
+        >
           <div className={styles.imageShell}>
             <ClientImage
               src={active.images?.[0] || fallbackImage}
@@ -127,6 +137,7 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
             <div className={styles.imageBadgeWrap}>
               <span className={styles.badge}>{getHeroLabel(active)}</span>
             </div>
+            <FavoriteButton listingId={active.id} />
           </div>
 
           <div className={styles.cardBody}>
