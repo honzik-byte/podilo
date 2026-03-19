@@ -22,7 +22,8 @@ export default async function Home() {
     getAllListings(),
     getListingLandingTaxonomy(),
   ]);
-  const featuredListings = allListings.slice(0, 6);
+  const promotedListings = allListings.filter((listing) => listing.is_top || listing.is_highlighted);
+  const featuredListings = (promotedListings.length > 0 ? promotedListings : allListings).slice(0, 6);
   const publishedListings = 12;
 
   return (
@@ -77,9 +78,9 @@ export default async function Home() {
         <div className={styles.sectionHeader}>
           <div>
             <p className={styles.sectionEyebrow}>Aktuální příležitosti</p>
-            <h2 className={styles.sectionTitle}>Nejnovější nabídky</h2>
+            <h2 className={styles.sectionTitle}>Vybrané nabídky</h2>
             <p className={styles.sectionText}>
-              Výběr čerstvě zveřejněných podílů, které můžete dále filtrovat podle lokality, ceny nebo situace nabídky.
+              Na úvodní stránce zobrazujeme především aktivně propagované nabídky, které mají být ve feedu nejvíc vidět.
             </p>
           </div>
           <Link href="/listings" className={styles.viewAll}>
