@@ -3,7 +3,6 @@ import ListingCard from '@/components/ListingCard';
 import Button from '@/components/Button';
 import HeroStats from '@/components/HeroStats';
 import HeroShowcase from '@/components/HeroShowcase';
-import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import { articles } from '@/lib/articleContent';
 import { getAllListings, getListingLandingTaxonomy } from '@/lib/listingQueries';
 import styles from './page.module.css';
@@ -45,25 +44,16 @@ export default async function Home() {
                   <Button variant="outline">Prohlížet nabídky</Button>
                 </Link>
               </div>
-
-              <div className={styles.heroQuickNotes}>
-                <span>Jasně oddělená cena podílu a hodnota celku</span>
-                <span>Přímý kontakt bez realitní kanceláře</span>
-              </div>
             </div>
 
             <div className={styles.heroAside}>
               <div className={styles.heroStack}>
-                <HeroShowcase />
+                <HeroShowcase listings={featuredListings} />
                 <HeroStats publishedListings={publishedListings} />
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      <section className={`container ${styles.heroEchoSection}`}>
-        <TestimonialsCarousel />
       </section>
 
       <section className={`container ${styles.proofSection}`}>
