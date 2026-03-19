@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import ListingCard from '@/components/ListingCard';
 import Button from '@/components/Button';
-import WhyRegisterCard from '@/components/WhyRegisterCard';
 import HeroStats from '@/components/HeroStats';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import { articles } from '@/lib/articleContent';
@@ -18,23 +17,8 @@ const articleHighlights = [
   .map((slug) => articles.find((article) => article.slug === slug))
   .filter((article): article is NonNullable<typeof article> => Boolean(article));
 
-const commonBuyerQuestions = [
-  {
-    question: 'Jak poznám, jestli je cena podílu realistická?',
-    answer: 'Sledujte rozdíl mezi cenou za nabízený podíl, odhadem ceny celé nemovitosti a popisem situace. Podobná cena bez kontextu nestačí.',
-  },
-  {
-    question: 'Je Podilo realitní kancelář nebo zprostředkovatel?',
-    answer: 'Ne. Podilo funguje jako specializované tržiště. Zájemce a prodávající se propojují napřímo a další kroky řeší mezi sebou.',
-  },
-  {
-    question: 'Co si ověřit ještě před prvním kontaktem?',
-    answer: 'Velikost podílu, obsazenost, odhad ceny celé nemovitosti, důvod prodeje a jestli inzerát dává jasný smysl i bez dovysvětlování po telefonu.',
-  },
-];
-
 export default async function Home() {
-  const [allListings, { regions, propertyTypes }] = await Promise.all([
+  const [allListings, { propertyTypes }] = await Promise.all([
     getAllListings(),
     getListingLandingTaxonomy(),
   ]);
@@ -116,16 +100,6 @@ export default async function Home() {
         )}
       </section>
 
-      <section className={`container ${styles.registerSection}`}>
-        <div className={styles.sectionHeaderSimple}>
-          <div>
-            <p className={styles.sectionEyebrow}>Registrace</p>
-            <h2 className={styles.sectionTitle}>Účet dává smysl hlavně tehdy, když chcete trh aktivně sledovat</h2>
-          </div>
-        </div>
-        <WhyRegisterCard title="Uložte si zajímavé nabídky a vraťte se k nim později" />
-      </section>
-
       <section className={`container ${styles.trustSection}`}>
         <div className={styles.sectionHeaderSimple}>
           <div>
@@ -147,47 +121,6 @@ export default async function Home() {
             <strong>Podilo jako specializované tržiště</strong>
             <p>Soustředíme se na srozumitelnost ceny podílu, kontext nabídky a lepší orientaci na trhu se spoluvlastnickými podíly.</p>
           </div>
-        </div>
-      </section>
-
-      {propertyTypes.length > 0 && (
-        <section className={`container ${styles.propertySection}`}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <p className={styles.sectionEyebrow}>Podle typu nemovitosti</p>
-              <h2 className={styles.sectionTitle}>Rychlý vstup do typu nabídky, který právě řešíte</h2>
-            </div>
-            <Link href="/listings" className={styles.viewAll}>
-              Otevřít marketplace →
-            </Link>
-          </div>
-
-          <div className={styles.typeGrid}>
-            {propertyTypes.slice(0, 4).map((propertyType) => (
-              <Link key={propertyType.slug} href={`/typ-nemovitosti/${propertyType.slug}`} className={styles.typeCard}>
-                <span>{propertyType.label}</span>
-                <strong>{propertyType.count} aktivních nabídek</strong>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section className={`container ${styles.faqSection}`}>
-        <div className={styles.sectionHeaderSimple}>
-          <div>
-            <p className={styles.sectionEyebrow}>Co kupující řeší nejčastěji</p>
-            <h2 className={styles.sectionTitle}>Krátké odpovědi na otázky, které rozhodují o prvním kontaktu</h2>
-          </div>
-        </div>
-
-        <div className={styles.faqGrid}>
-          {commonBuyerQuestions.map((item) => (
-            <div key={item.question} className={styles.faqCard}>
-              <h3>{item.question}</h3>
-              <p>{item.answer}</p>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -218,45 +151,16 @@ export default async function Home() {
           ))}
         </div>
 
-        {(regions.length > 0 || propertyTypes.length > 0) && (
-          <div className={styles.articleGrid} style={{ marginTop: '1.25rem' }}>
-            {regions.slice(0, 2).map((region) => (
-              <Link key={region.slug} href={`/lokality/${region.slug}`} className={styles.articleCard}>
-                <div className={styles.articleMeta}>
-                  <span>Lokalita</span>
-                  <span>{region.count} nabídek</span>
-                </div>
-                <h3>Podíly v regionu {region.name}</h3>
-                <p>Programatický přehled aktivních nabídek pro konkrétní region.</p>
-              </Link>
-            ))}
-            {propertyTypes.slice(0, 1).map((propertyType) => (
-              <Link key={propertyType.slug} href={`/typ-nemovitosti/${propertyType.slug}`} className={styles.articleCard}>
-                <div className={styles.articleMeta}>
-                  <span>Typ nemovitosti</span>
-                  <span>{propertyType.count} nabídek</span>
-                </div>
-                <h3>Podíly pro typ {propertyType.label}</h3>
-                <p>Rychlý vstup do nabídek stejného typu nemovitosti bez dalšího filtrování.</p>
+        {propertyTypes.length > 0 && (
+          <div className={styles.typeStrip}>
+            {propertyTypes.slice(0, 4).map((propertyType) => (
+              <Link key={propertyType.slug} href={`/typ-nemovitosti/${propertyType.slug}`} className={styles.typeStripLink}>
+                <span>{propertyType.label}</span>
+                <strong>{propertyType.count} nabídek</strong>
               </Link>
             ))}
           </div>
         )}
-      </section>
-
-      <section className={`container ${styles.investorSection}`}>
-        <div className={styles.investorCard}>
-          <div>
-            <p className={styles.sectionEyebrow}>Pro aktivní investory</p>
-            <h2 className={styles.sectionTitle}>Investor Pro připravujeme, ale dáváme mu realistický tvar</h2>
-            <p className={styles.sectionText}>
-              Nechceme generický subscription box. Připravujeme uložená hledání, alerty, watchlist a další nástroje, které dávají smysl jen těm, kdo sledují trh pravidelně.
-            </p>
-          </div>
-          <Link href="/premium">
-            <Button variant="outline">Co připravujeme</Button>
-          </Link>
-        </div>
       </section>
     </div>
   );

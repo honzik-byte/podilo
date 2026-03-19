@@ -1,7 +1,7 @@
 .home {
   display: flex;
   flex-direction: column;
-  gap: 4.25rem;
+  gap: 3.5rem;
   padding-bottom: 5rem;
 }
 
@@ -87,7 +87,6 @@
 
 .proofSection,
 .feedSection,
-.registerSection,
 .educationSection,
 .trustSection,
 .propertySection,
@@ -137,6 +136,34 @@
 .typeGrid {
   display: grid;
   gap: 1rem;
+}
+
+.typeStrip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+}
+
+.typeStripLink {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1.2rem;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
+}
+
+.typeStripLink span {
+  font-weight: 800;
+  color: var(--foreground);
+}
+
+.typeStripLink strong {
+  color: var(--muted-text);
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 
 .trustGrid {
@@ -274,7 +301,8 @@
   .proofGrid,
   .trustGrid,
   .faqGrid,
-  .typeGrid {
+  .typeGrid,
+  .typeStrip {
     grid-template-columns: 1fr;
   }
 
@@ -290,7 +318,7 @@
 
 @media (max-width: 720px) {
   .home {
-    gap: 3.5rem;
+    gap: 2.75rem;
   }
 
   .hero {
