@@ -57,21 +57,19 @@
   z-index: 1;
   display: grid;
   grid-template-columns: 1fr;
-  border-radius: 1.9rem;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 250, 252, 0.95) 100%);
-  box-shadow:
-    0 22px 55px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  border-radius: 1.35rem;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
   overflow: hidden;
   transition: transform 0.18s ease-out;
 }
 
 .imageShell {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
-  background: #e5e7eb;
+  background: var(--muted);
 }
 
 .image {
@@ -85,7 +83,7 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.04) 0%, rgba(15, 23, 42, 0.18) 100%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.02) 0%, rgba(15, 23, 42, 0.1) 100%),
     radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 38%);
   pointer-events: none;
   transition: transform 0.18s ease-out;
@@ -94,8 +92,8 @@
 .cardBody {
   display: grid;
   align-content: start;
-  gap: 0.85rem;
-  padding: 1.15rem 1.2rem 1.25rem;
+  gap: 0.75rem;
+  padding: 1.4rem;
 }
 
 .cardHeader {
@@ -149,41 +147,101 @@
   line-height: 1.5;
 }
 
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.type {
+  font-size: 0.8rem;
+  color: var(--muted-text);
+  background: #f4f4f5;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid #ebebef;
+  white-space: nowrap;
+}
+
 .title {
-  font-size: clamp(1.45rem, 2.3vw, 1.95rem);
-  line-height: 1.08;
-  letter-spacing: -0.04em;
-  max-width: 14ch;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  min-height: 3.15rem;
 }
 
 .priceBlock {
   display: grid;
-  gap: 0.3rem;
+  gap: 0.85rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #efeff2;
 }
 
 .priceLabel {
   font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--muted-text);
+  font-weight: 700;
+  margin-bottom: 0.35rem;
 }
 
 .price {
-  font-size: clamp(1.85rem, 3vw, 2.45rem);
-  line-height: 1;
-  letter-spacing: -0.05em;
-  word-break: keep-all;
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
 }
 
-.chips {
+.tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: 0.6rem;
+  min-height: 5.15rem;
+  align-content: flex-start;
 }
 
-.chip {
+.chip,
+.chipMuted {
   min-height: 2.1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--foreground);
+  background: #f7f7f8;
+  padding: 0.42rem 0.78rem;
+  border-radius: 999px;
+  border: 1px solid #ededf0;
+}
+
+.chipMuted {
+  color: var(--muted-text);
+}
+
+.secondaryPrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  color: var(--muted-text);
+  font-size: 0.9rem;
+}
+
+.secondaryPrice strong {
+  color: var(--foreground);
+  font-size: 1rem;
+}
+
+.insight {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed #e7e7ec;
+  color: #1f2937;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  min-height: 4.5rem;
 }
 
 @keyframes pulse {
@@ -204,7 +262,7 @@
   }
 
   .imageShell {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 3 / 2;
   }
 
   .title {
@@ -223,6 +281,12 @@
 
   .cardHeader {
     flex-wrap: wrap;
+  }
+
+  .metaRow,
+  .secondaryPrice {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .imageBadgeWrap {

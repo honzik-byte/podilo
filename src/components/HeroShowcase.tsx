@@ -3,7 +3,13 @@
 import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import type { Listing } from '@/types';
 import ClientImage from '@/components/ClientImage';
-import { formatPrice, getEnergyClass, parseListing } from '@/lib/listingMetadata';
+import {
+  formatPrice,
+  getDiscountLabel,
+  getEnergyClass,
+  getOpportunityType,
+  parseListing,
+} from '@/lib/listingMetadata';
 import styles from './HeroShowcase.module.css';
 
 interface HeroShowcaseProps {
@@ -26,8 +32,8 @@ function getHeroChips(listing: Listing) {
   const parsed = parseListing(listing);
   const chips = [
     `Podíl ${listing.share_size}`,
-    parsed.details.opportunityType || listing.property_type,
-    listing.occupancy || getEnergyClass(listing, parsed.details),
+    listing.occupancy || parsed.details.currentUse || 'Stav neuveden',
+    `PENB ${getEnergyClass(listing, parsed.details)}`,
   ].filter(Boolean);
 
   return chips.slice(0, 3);
@@ -57,6 +63,9 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
 
   const active = showcaseListings[activeIndex] || showcaseListings[0];
   const chips = getHeroChips(active);
+  const parsed = parseListing(active);
+  const priceInsight = getDiscountLabel(active);
+  const opportunityType = getOpportunityType(parsed.details);
   const fallbackImage =
     'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20viewBox%3D%220%200%20800%20600%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22800%22%20height%3D%22600%22%20fill%3D%22%23ececf1%22%2F%3E%3Ctext%20x%3D%22400%22%20y%3D%22300%22%20fill%3D%22%23999999%22%20font-family%3D%22sans-serif%22%20font-size%3D%2224%22%20text-anchor%3D%22middle%22%3ENen%C3%AD%20fotografie%3C%2Ftext%3E%3C%2Fsvg%3E';
 
@@ -122,7 +131,10 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
 
           <div className={styles.cardBody}>
             <div className={styles.cardHeader}>
-              <div className={styles.location}>{active.location} • {active.property_type}</div>
+              <div className={styles.metaRow}>
+                <span className={styles.location}>{active.location}</span>
+                <span className={styles.type}>{active.property_type}</span>
+              </div>
               <div className={styles.tabs}>
                 {showcaseListings.map((listing, index) => (
                   <button
@@ -138,18 +150,27 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
 
             <h3 className={styles.title}>{active.title}</h3>
 
-            <div className={styles.priceBlock}>
-              <span className={styles.priceLabel}>Cena za nabízený podíl</span>
-              <strong className={styles.price}>{formatPrice(active.price)}</strong>
-            </div>
-
-            <div className={styles.chips}>
+            <div className={styles.tags}>
               {chips.map((chip) => (
                 <span key={chip} className={styles.chip}>
                   {chip}
                 </span>
               ))}
+              {opportunityType && <span className={styles.chipMuted}>{opportunityType}</span>}
             </div>
+
+            <div className={styles.priceBlock}>
+              <div>
+                <span className={styles.priceLabel}>Cena za nabízený podíl</span>
+                <strong className={styles.price}>{formatPrice(active.price)}</strong>
+              </div>
+              <div className={styles.secondaryPrice}>
+                <span>Odhad ceny celé nemovitosti</span>
+                <strong>{formatPrice(active.full_property_value)}</strong>
+              </div>
+            </div>
+
+            {priceInsight && <p className={styles.insight}>{priceInsight}</p>}
           </div>
         </div>
       </div>
