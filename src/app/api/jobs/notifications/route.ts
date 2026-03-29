@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
+import { isAuthorizedCronRequest } from '@/lib/apiAuth';
 import { sendEmail, renderPromotionEmail } from '@/lib/emailNotifications';
 import { reportError } from '@/lib/errorReporting';
 import { getPendingNotificationJobs, markNotificationFailed, markNotificationSent } from '@/lib/notificationJobs';
 
-async function runNotificationJob() {
+async function runNotificationJob(request: Request) {
+  if (!isAuthorizedCronRequest(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const jobs = await getPendingNotificationJobs();
   let sent = 0;
   let failed = 0;
@@ -42,10 +47,10 @@ async function runNotificationJob() {
   return NextResponse.json({ processed: jobs.length, sent, failed });
 }
 
-export async function GET() {
-  return runNotificationJob();
+export async function GET(request: Request) {
+  return runNotificationJob(request);
 }
 
-export async function POST() {
-  return runNotificationJob();
+export async function POST(request: Request) {
+  return runNotificationJob(request);
 }

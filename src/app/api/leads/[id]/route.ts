@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
+import { canAccessListingPrivateData } from '@/lib/apiAuth';
 import { createLead, getLeadsByListingId } from '@/lib/leads';
 import { trackListingEvent } from '@/lib/listingAnalytics';
 
-export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
+  const access = await canAccessListingPrivateData(request, resolvedParams.id);
+
+  if (!access.allowed) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const leads = await getLeadsByListingId(resolvedParams.id);
   return NextResponse.json({
     count: leads.length,

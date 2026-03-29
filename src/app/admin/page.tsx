@@ -70,8 +70,6 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const init = async () => {
-      await fetch('/api/promotions/sync', { method: 'POST' });
-
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session) {

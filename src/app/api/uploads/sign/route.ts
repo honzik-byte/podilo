@@ -1,11 +1,29 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { canAccessListingPrivateData, getAuthenticatedUser } from '@/lib/apiAuth';
+import { isDatabaseListingId } from '@/lib/listingIds';
 
 export async function POST(request: Request) {
-  const payload = (await request.json()) as { fileName?: string };
+  const auth = await getAuthenticatedUser(request);
+
+  if (!auth) {
+    return NextResponse.json({ error: 'Pro nahrání fotek je potřeba být přihlášen.' }, { status: 401 });
+  }
+
+  const payload = (await request.json()) as { fileName?: string; listingId?: string };
+
+  if (payload.listingId && isDatabaseListingId(payload.listingId)) {
+    const access = await canAccessListingPrivateData(request, payload.listingId);
+
+    if (!access.allowed) {
+      return NextResponse.json({ error: 'K tomuto inzerátu nemáte oprávnění nahrávat fotky.' }, { status: 403 });
+    }
+  }
+
   const fileName = payload.fileName || 'image.jpg';
-  const extension = fileName.split('.').pop() || 'jpg';
-  const filePath = `${crypto.randomUUID()}.${extension}`;
+  const extension = (fileName.split('.').pop() || 'jpg').toLowerCase();
+  const safeExtension = ['jpg', 'jpeg', 'png', 'webp'].includes(extension) ? extension : 'jpg';
+  const filePath = `${auth.user.id}/${crypto.randomUUID()}.${safeExtension}`;
 
   const client = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -29,8 +29,6 @@ export default function MyListingsPage() {
 
   useEffect(() => {
     async function loadOwnListings() {
-      await fetch('/api/promotions/sync', { method: 'POST' });
-
       const { data: sessionData } = await supabase.auth.getSession();
       setSession(sessionData.session);
 
@@ -47,13 +45,16 @@ export default function MyListingsPage() {
 
       const nextListings = (data as Listing[]) || [];
       setListings(nextListings);
+      const authHeaders = sessionData.session.access_token
+        ? { Authorization: `Bearer ${sessionData.session.access_token}` }
+        : undefined;
 
       const countsEntries = await Promise.all(
         nextListings.map(async (listing) => {
           const [favoritesResponse, leadsResponse, analyticsResponse] = await Promise.all([
             fetch(`/api/favorite-stats/${listing.id}`),
-            fetch(`/api/leads/${listing.id}`),
-            fetch(`/api/listing-analytics/${listing.id}`),
+            fetch(`/api/leads/${listing.id}`, { headers: authHeaders }),
+            fetch(`/api/listing-analytics/${listing.id}`, { headers: authHeaders }),
           ]);
 
           const favoritesJson = favoritesResponse.ok ? await favoritesResponse.json() : { count: 0 };

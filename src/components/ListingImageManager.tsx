@@ -62,10 +62,17 @@ export default function ListingImageManager({
           }
 
           await validateImageDimensions(file);
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+
           const signResponse = await fetch('/api/uploads/sign', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              ...(session?.access_token
+                ? { Authorization: `Bearer ${session.access_token}` }
+                : {}),
             },
             body: JSON.stringify({ fileName: file.name }),
           });

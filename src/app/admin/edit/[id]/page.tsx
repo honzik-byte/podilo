@@ -62,14 +62,19 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
       }
 
       if (!data) {
-        const localResponse = await fetch(`/api/local-listings/${id}`);
-        if (!localResponse.ok) {
+        const authHeaders = sessionData.session.access_token
+          ? { Authorization: `Bearer ${sessionData.session.access_token}` }
+          : undefined;
+        const secureLocalResponse = await fetch(`/api/local-listings/${id}`, {
+          headers: authHeaders,
+        });
+        if (!secureLocalResponse.ok) {
           setError('Inzerát se nepodařilo načíst.');
           setLoading(false);
           return;
         }
 
-        const localListing = (await localResponse.json()) as Listing;
+        const localListing = (await secureLocalResponse.json()) as Listing;
         const parsed = parseListing(localListing);
         setListing(localListing);
         setPropertyType(localListing.property_type);
@@ -178,10 +183,14 @@ export default function AdminEditListingPage({ params }: { params: Promise<{ id:
     );
 
     if (listing.id.startsWith('local-')) {
+      const {
+        data: { session: currentSession },
+      } = await supabase.auth.getSession();
       const localResponse = await fetch(`/api/local-listings/${listing.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          ...(currentSession?.access_token ? { Authorization: `Bearer ${currentSession.access_token}` } : {}),
         },
         body: JSON.stringify(updatePayload),
       });

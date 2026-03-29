@@ -15,8 +15,15 @@ export default function DeleteButton({ listingId }: { listingId: string }) {
     setLoading(true);
 
     if (listingId.startsWith('local-')) {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       const response = await fetch(`/api/local-listings/${listingId}`, {
         method: 'DELETE',
+        headers: {
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
       });
 
       if (!response.ok) {

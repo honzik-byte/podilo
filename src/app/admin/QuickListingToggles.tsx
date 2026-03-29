@@ -19,10 +19,15 @@ export default function QuickListingToggles({ listing }: QuickListingTogglesProp
   const [loadingKey, setLoadingKey] = useState<'top' | 'highlighted' | 'status' | null>(null);
 
   const persistLocalListing = async (nextListing: Listing) => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     const response = await fetch(`/api/local-listings/${listing.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
       },
       body: JSON.stringify(nextListing),
     });

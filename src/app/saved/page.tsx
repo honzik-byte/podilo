@@ -15,8 +15,6 @@ export default function SavedListingsPage() {
 
   useEffect(() => {
     async function loadFavorites() {
-      await fetch('/api/promotions/sync', { method: 'POST' });
-
       const favorites = readFavorites();
 
       if (favorites.length === 0) {
