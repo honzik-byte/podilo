@@ -4,6 +4,7 @@ import ClientImage from '@/components/ClientImage';
 import FavoriteButton from '@/components/FavoriteButton';
 import {
   formatPrice,
+  formatPriceShort,
   getDiscountLabel,
   getEnergyClass,
   getOpportunityType,
@@ -47,11 +48,11 @@ export default function ListingCard({ listing }: ListingCardProps) {
           </div>
         </Link>
 
-        <div className={styles.badges}>
-          {listing.is_top && <span className={styles.topBadge}>TOP nabídka</span>}
-          {listing.is_highlighted && <span className={styles.highlightBadge}>Zvýrazněno</span>}
-          {verification.verified && <span className={styles.verifiedBadge}>Ověřený inzerent</span>}
-        </div>
+        {listing.is_top && <span className={`${styles.tab} ${styles.topBadge}`}>TOP nabídka</span>}
+        {!listing.is_top && listing.is_highlighted && (
+          <span className={`${styles.tab} ${styles.highlightBadge}`}>Zvýrazněno</span>
+        )}
+        {verification.verified && <span className={styles.verifiedBadge}>Ověřeno</span>}
 
         <FavoriteButton listingId={listing.id} />
       </div>
@@ -76,13 +77,13 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
           <div className={styles.priceBlock}>
             <div>
-              <p className={styles.priceLabel}>Cena za nabízený podíl</p>
+              <p className={styles.priceLabel}>Cena za podíl</p>
               <p className={styles.price}>{formatPrice(listing.price)}</p>
+              <p className={styles.secondaryPrice}>
+                Odhad celku <strong>{formatPrice(listing.full_property_value)}</strong>
+              </p>
             </div>
-            <div className={styles.secondaryPrice}>
-              <span>Odhad ceny celé nemovitosti</span>
-              <strong>{formatPrice(listing.full_property_value)}</strong>
-            </div>
+            <span className={styles.stamp}>{formatPriceShort(listing.price)}</span>
           </div>
 
           {priceInsight && <p className={styles.insight}>{priceInsight}</p>}

@@ -29,8 +29,8 @@ export default async function Home() {
   return (
     <div className={styles.home}>
       <section className={styles.hero}>
-        <div className={`container ${styles.heroContainer}`}>
-          <div className={styles.heroContent}>
+        <div className="container">
+          <div className={styles.heroSplit}>
             <div className={styles.heroCopy}>
               <p className={styles.eyebrow}>Marketplace pro spoluvlastnické podíly</p>
               <h1 className={styles.heroTitle}>Kupujte a prodávejte podíly nemovitostí s větší jistotou</h1>
@@ -39,10 +39,12 @@ export default async function Home() {
               </p>
               <div className={styles.heroActions}>
                 <Link href="/add">
-                  <Button>Přidat inzerát</Button>
+                  <Button className={styles.heroPrimaryButton}>Přidat inzerát</Button>
                 </Link>
                 <Link href="/listings">
-                  <Button variant="outline">Prohlížet nabídky</Button>
+                  <Button variant="outline" className={styles.heroSecondaryButton}>
+                    Prohlížet nabídky
+                  </Button>
                 </Link>
               </div>
             </div>

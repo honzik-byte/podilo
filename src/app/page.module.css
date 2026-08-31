@@ -6,32 +6,24 @@
 }
 
 .hero {
-  position: relative;
-  padding: 5.5rem 0 0;
+  padding: 3rem 0 0;
 }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at top center, rgba(226, 232, 240, 0.92), transparent 38%),
-    radial-gradient(circle at 78% 26%, rgba(219, 234, 254, 0.75), transparent 24%),
-    radial-gradient(circle at 62% 78%, rgba(241, 245, 249, 0.82), transparent 30%),
-    linear-gradient(180deg, #fcfcfd 0%, #f6f8fb 100%);
-  border-bottom: 1px solid var(--border);
-}
-
-.heroContainer {
-  position: relative;
-}
-
-.heroContent {
+.heroSplit {
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(340px, 0.98fr);
-  gap: 2.4rem;
-  align-items: center;
-  padding-bottom: 4rem;
+  grid-template-columns: minmax(0, 0.62fr) minmax(320px, 0.38fr);
+  align-items: stretch;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(15, 31, 61, 0.1);
+}
+
+.heroCopy {
+  background: #0f1f3d;
+  padding: 3.5rem 3.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .eyebrow,
@@ -44,14 +36,20 @@
   font-weight: 800;
 }
 
+.heroCopy .eyebrow {
+  color: #c9a15a;
+}
+
 .heroTitle {
-  font-size: clamp(2.7rem, 5.8vw, 4.6rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.04em;
-  margin-bottom: 1.7rem;
-  max-width: 13.5ch;
+  font-family: var(--font-serif);
+  font-size: clamp(2.3rem, 3.6vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.5rem;
+  max-width: 14ch;
   text-wrap: balance;
+  color: #faf7f0;
 }
 
 .heroSubtitle,
@@ -62,6 +60,11 @@
   max-width: 60ch;
 }
 
+.heroCopy .heroSubtitle {
+  color: #b9c2d6;
+  max-width: 42ch;
+}
+
 .heroActions {
   display: flex;
   flex-wrap: wrap;
@@ -69,8 +72,28 @@
   margin-top: 2.25rem;
 }
 
+.heroPrimaryButton {
+  background: linear-gradient(180deg, #d3ac68 0%, #c9a15a 100%) !important;
+  color: #0f1f3d !important;
+  border-color: #c9a15a !important;
+}
+
+.heroSecondaryButton {
+  background: transparent !important;
+  color: #faf7f0 !important;
+  border-color: rgba(250, 247, 240, 0.45) !important;
+}
+
+.heroSecondaryButton:hover {
+  background: rgba(250, 247, 240, 0.08) !important;
+  border-color: rgba(250, 247, 240, 0.7) !important;
+}
+
 .heroAside {
   display: flex;
+  align-items: center;
+  background: linear-gradient(160deg, #f3eee1 0%, #ede4cd 100%);
+  padding: 2.5rem;
 }
 
 .heroStack {
@@ -242,10 +265,11 @@
 }
 
 .sectionTitle {
-  font-size: clamp(1.9rem, 3.5vw, 2.8rem);
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1.14;
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.16;
   margin-bottom: 0.5rem;
   max-width: none;
   text-wrap: balance;
@@ -260,9 +284,16 @@
 .grid,
 .articleGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   align-items: stretch;
+}
+
+.grid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 320px));
+}
+
+.articleGrid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .emptyState {
@@ -299,7 +330,7 @@
 }
 
 @media (max-width: 1024px) {
-  .heroContent,
+  .heroSplit,
   .proofGrid,
   .trustGrid,
   .faqGrid,
@@ -324,11 +355,12 @@
   }
 
   .hero {
-    padding-top: 4rem;
+    padding-top: 2rem;
   }
 
-  .heroContent {
-    padding-bottom: 3rem;
+  .heroCopy,
+  .heroAside {
+    padding: 2rem;
   }
 
   .heroCard,

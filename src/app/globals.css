@@ -1,16 +1,24 @@
 :root {
-  --background: #fafafb;
-  --foreground: #09090b;
-  --accent: #e2e8f0;
-  --accent-text: #2563eb;
-  --border: #e4e4e7;
-  --muted: #f4f4f5;
-  --muted-text: #71717a;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --radius: 0.75rem;
+  --background: #faf7f0;
+  --foreground: #0f1f3d;
+  --ink: #1c1b18;
+  --accent: #edddb8;
+  --accent-text: #c9a15a;
+  --brass: #c9a15a;
+  --brass-strong: #a87f3c;
+  --border: #e4dcc8;
+  --muted: #f3eee1;
+  --muted-text: #6b6558;
+  --success: #2f6e4e;
+  --success-bg: #e6efe7;
+  --danger: #a23b3b;
+  --danger-bg: #fbeae5;
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-caslon), 'Iowan Old Style', Georgia, serif;
+  --shadow-sm: 0 1px 2px 0 rgb(15 31 61 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(15 31 61 / 0.08), 0 2px 4px -2px rgb(15 31 61 / 0.08);
+  --shadow-lg: 0 10px 15px -3px rgb(15 31 61 / 0.1), 0 4px 6px -4px rgb(15 31 61 / 0.1);
+  --radius: 0.625rem;
 }
 
 * {
@@ -87,7 +95,7 @@ button {
 
 .input:focus, .textarea:focus, .select:focus {
   border-color: var(--accent-text);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 4px rgba(201, 161, 90, 0.16);
   background-color: #ffffff;
 }
 
@@ -111,7 +119,7 @@ button {
 .input:invalid,
 .textarea:invalid,
 .select:invalid {
-  border-color: #f1b4b4;
+  border-color: #d99a9a;
 }
 
 @media (max-width: 640px) {

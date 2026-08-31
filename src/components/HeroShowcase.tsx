@@ -6,6 +6,7 @@ import ClientImage from '@/components/ClientImage';
 import FavoriteButton from '@/components/FavoriteButton';
 import {
   formatPrice,
+  formatPriceShort,
   getDiscountLabel,
   getEnergyClass,
   getOpportunityType,
@@ -135,7 +136,7 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
             />
             <div className={styles.imageOverlay} style={imageStyle} />
             <div className={styles.imageBadgeWrap}>
-              <span className={styles.badge}>{getHeroLabel(active)}</span>
+              <span className={styles.statusTab}>{getHeroLabel(active)}</span>
             </div>
             <FavoriteButton listingId={active.id} />
           </div>
@@ -174,11 +175,11 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
               <div>
                 <span className={styles.priceLabel}>Cena za nabízený podíl</span>
                 <strong className={styles.price}>{formatPrice(active.price)}</strong>
+                <p className={styles.secondaryPrice}>
+                  Odhad celku <strong>{formatPrice(active.full_property_value)}</strong>
+                </p>
               </div>
-              <div className={styles.secondaryPrice}>
-                <span>Odhad ceny celé nemovitosti</span>
-                <strong>{formatPrice(active.full_property_value)}</strong>
-              </div>
+              <span className={styles.stamp}>{formatPriceShort(active.price)}</span>
             </div>
 
             {priceInsight && <p className={styles.insight}>{priceInsight}</p>}

@@ -114,6 +114,24 @@ export function formatPrice(value?: number | null) {
   }).format(Number(value));
 }
 
+export function formatPriceShort(value?: number | null) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return '—';
+  }
+
+  const amount = Number(value);
+
+  if (amount >= 1_000_000) {
+    return `${(amount / 1_000_000).toLocaleString('cs-CZ', { maximumFractionDigits: 2 })}\nmil. Kč`;
+  }
+
+  if (amount >= 1_000) {
+    return `${Math.round(amount / 1_000).toLocaleString('cs-CZ')}\ntis. Kč`;
+  }
+
+  return `${amount.toLocaleString('cs-CZ')}\nKč`;
+}
+
 export function getShareValueEstimate(listing: Listing) {
   if (!listing.full_property_value || !listing.share_size.includes('/')) {
     return null;
