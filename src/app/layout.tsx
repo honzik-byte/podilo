@@ -12,13 +12,31 @@ const libreCaslonText = Libre_Caslon_Text({
   variable: '--font-caslon',
 })
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://podilo.cz'
+const title = 'Podilo — Tržiště spoluvlastnických podílů nemovitostí'
+const description = 'Kupujte a prodávejte podíly nemovitostí s větší jistotou. Ověřené nabídky, jasná dokumentace a přímé spojení s vlastníkem — bez zbytečných zprostředkovatelů.'
+
 export const metadata: Metadata = {
-  title: 'Podilo - Tržiště podílů nemovitostí',
-  description: 'Minimalistický online marketplace zaměřený výhradně na prodej a nákup podílů nemovitostí.',
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',
     apple: '/icon.svg',
+  },
+  openGraph: {
+    title,
+    description,
+    url: siteUrl,
+    siteName: 'Podilo',
+    locale: 'cs_CZ',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
   },
 }
 
