@@ -6,8 +6,9 @@
 
 .title {
   font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-weight: 400;
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
   margin-bottom: 1rem;
 }
 
@@ -56,8 +57,9 @@
 
 .selectorTitle {
   font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
 }
 
 .selectorText,
@@ -171,7 +173,8 @@
 
 .price {
   font-size: 2.5rem;
-  font-weight: 800;
+  font-weight: 400;
+  font-family: var(--font-serif);
   color: var(--foreground);
 }
 

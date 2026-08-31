@@ -56,8 +56,9 @@
 .price {
   font-size: 2.6rem;
   line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.05em;
+  font-weight: 400;
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
   margin-bottom: 0.9rem;
 }
 

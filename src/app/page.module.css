@@ -6,7 +6,7 @@
 }
 
 .hero {
-  padding: 3rem 0 0;
+  padding: 2rem 0 0;
 }
 
 .heroSplit {
@@ -20,7 +20,7 @@
 
 .heroCopy {
   background: #0f1f3d;
-  padding: 3.5rem 3.25rem;
+  padding: 2.5rem 2.75rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,12 +42,12 @@
 
 .heroTitle {
   font-family: var(--font-serif);
-  font-size: clamp(2.3rem, 3.6vw, 3.2rem);
+  font-size: clamp(2.1rem, 3vw, 2.75rem);
   font-weight: 400;
-  line-height: 1.12;
+  line-height: 1.14;
   letter-spacing: -0.01em;
-  margin-bottom: 1.5rem;
-  max-width: 14ch;
+  margin-bottom: 1.1rem;
+  max-width: 15ch;
   text-wrap: balance;
   color: #faf7f0;
 }
@@ -69,7 +69,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.85rem;
-  margin-top: 2.25rem;
+  margin-top: 1.6rem;
 }
 
 .heroPrimaryButton {
@@ -93,13 +93,15 @@
   display: flex;
   align-items: center;
   background: linear-gradient(160deg, #f3eee1 0%, #ede4cd 100%);
-  padding: 2.5rem;
+  padding: 1.75rem;
 }
 
-.heroStack {
-  display: grid;
-  gap: 0.95rem;
+.heroAside > * {
   width: 100%;
+}
+
+.heroStatsRow {
+  margin: 1.75rem 0 0;
 }
 
 .proofCard,

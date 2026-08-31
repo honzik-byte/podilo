@@ -8,7 +8,7 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-inter' })
 const libreCaslonText = Libre_Caslon_Text({
   subsets: ['latin', 'latin-ext'],
-  weight: '400',
+  weight: ['400', '700'],
   variable: '--font-caslon',
 })
 

@@ -66,9 +66,10 @@
 
 .title {
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
+  font-weight: 400;
+  font-family: var(--font-serif);
   line-height: 1.05;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.01em;
 }
 
 .heroTags {
@@ -150,8 +151,9 @@
 
 .sectionTitle {
   font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
   margin-bottom: 0.45rem;
 }
 
@@ -242,8 +244,9 @@
   display: block;
   font-size: 2.3rem;
   line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.05em;
+  font-weight: 400;
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
 }
 
 .priceSummaryList {
@@ -281,7 +284,8 @@
 
 .contactTitle {
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 400;
+  font-family: var(--font-serif);
   margin-bottom: 0.5rem;
 }
 
@@ -354,8 +358,9 @@
 
 .phoneNumber {
   font-size: 1.8rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
 }
 
 .phoneHiddenWrapper {
@@ -365,7 +370,8 @@
 
 .phoneHidden {
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 400;
+  font-family: var(--font-serif);
   filter: blur(6px);
   user-select: none;
 }

@@ -5,7 +5,7 @@
 }
 
 .stat {
-  padding: 1rem 1.05rem;
+  padding: 1.35rem 1.5rem;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.92);

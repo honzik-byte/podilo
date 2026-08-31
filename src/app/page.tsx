@@ -50,11 +50,12 @@ export default async function Home() {
             </div>
 
             <div className={styles.heroAside}>
-              <div className={styles.heroStack}>
-                <HeroShowcase listings={featuredListings} />
-                <HeroStats publishedListings={publishedListings} />
-              </div>
+              <HeroShowcase listings={featuredListings} />
             </div>
+          </div>
+
+          <div className={styles.heroStatsRow}>
+            <HeroStats publishedListings={publishedListings} />
           </div>
         </div>
       </section>

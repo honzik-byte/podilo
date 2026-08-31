@@ -6,9 +6,10 @@
 
 .title {
   font-size: clamp(2.3rem, 5vw, 4rem);
-  font-weight: 800;
+  font-weight: 400;
+  font-family: var(--font-serif);
   margin-bottom: 1rem;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.01em;
   line-height: 1.02;
 }
 
@@ -30,10 +31,11 @@
 
 .prose h2 {
   font-size: 1.55rem;
-  font-weight: 800;
+  font-weight: 400;
+  font-family: var(--font-serif);
   margin-top: 1rem;
   margin-bottom: 0.75rem;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
 }
 
 .prose h3 {

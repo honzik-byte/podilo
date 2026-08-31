@@ -56,7 +56,8 @@
   font-size: 5rem;
   line-height: 1;
   color: rgba(17, 24, 39, 0.06);
-  font-weight: 800;
+  font-weight: 400;
+  font-family: var(--font-serif);
 }
 
 .quote {
