@@ -118,14 +118,19 @@ export default function AddListingForm() {
       if (data.location) {
         try {
           const searchQuery = data.street_address ? `${data.street_address}, ${data.location}` : data.location;
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`
-          );
+          const response = await fetch('/api/geocode', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${sessionData.session.access_token}`,
+            },
+            body: JSON.stringify({ query: searchQuery }),
+          });
           if (response.ok) {
-            const geoData: Array<{ lat: string; lon: string }> = await response.json();
-            if (geoData.length > 0) {
-              lat = parseFloat(geoData[0].lat);
-              lng = parseFloat(geoData[0].lon);
+            const geoData: { location: { lat: number; lng: number } | null } = await response.json();
+            if (geoData.location) {
+              lat = geoData.location.lat;
+              lng = geoData.location.lng;
             }
           }
         } catch (geocodingError) {

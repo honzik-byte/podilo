@@ -40,6 +40,38 @@ export async function sendEmail(input: SendEmailInput) {
   return response.json();
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export function renderLeadNotificationEmail(payload: {
+  listingTitle: string;
+  leadName: string;
+  leadEmail: string;
+  leadPhone?: string;
+  leadMessage: string;
+  listingUrl: string;
+}) {
+  const { listingTitle, leadName, leadEmail, leadPhone, leadMessage, listingUrl } = payload;
+
+  return `
+    <h1>Nová poptávka k inzerátu</h1>
+    <p>Inzerát <strong>${escapeHtml(listingTitle)}</strong> má novou poptávku:</p>
+    <p>
+      <strong>Jméno:</strong> ${escapeHtml(leadName)}<br />
+      <strong>E-mail:</strong> ${escapeHtml(leadEmail)}<br />
+      ${leadPhone ? `<strong>Telefon:</strong> ${escapeHtml(leadPhone)}<br />` : ''}
+    </p>
+    <p><strong>Zpráva:</strong><br />${escapeHtml(leadMessage).replace(/\n/g, '<br />')}</p>
+    <p><a href="${listingUrl}">Otevřít inzerát</a></p>
+  `;
+}
+
 export function renderPromotionEmail(type: string, payload: Record<string, unknown>) {
   const listingTitle = String(payload.listingTitle || 'váš inzerát');
   const endsAt = payload.endsAt ? new Date(String(payload.endsAt)).toLocaleString('cs-CZ') : null;

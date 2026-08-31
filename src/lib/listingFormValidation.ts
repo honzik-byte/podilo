@@ -16,3 +16,7 @@ export function isValidListingPhone(value: string) {
   const normalized = value.replace(/\s+/g, '');
   return /^\+?[0-9]{9,15}$/.test(normalized);
 }
+
+export function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
