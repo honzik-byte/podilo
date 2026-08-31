@@ -360,9 +360,35 @@
     padding-top: 2rem;
   }
 
-  .heroCopy,
+  .heroCopy {
+    padding: 2.25rem 1.5rem 2.5rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .heroCopy .eyebrow {
+    text-align: center;
+  }
+
+  .heroTitle {
+    max-width: 20ch;
+  }
+
+  .heroCopy .heroSubtitle {
+    max-width: 34ch;
+  }
+
+  .heroActions {
+    justify-content: center;
+  }
+
+  .heroPrimaryButton,
+  .heroSecondaryButton {
+    min-width: 12rem;
+  }
+
   .heroAside {
-    padding: 2rem;
+    padding: 1.25rem;
   }
 
   .heroCard,
