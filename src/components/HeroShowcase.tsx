@@ -171,7 +171,7 @@ export default function HeroShowcase({ listings }: HeroShowcaseProps) {
 
             <div className={styles.priceBlock}>
               <div>
-                <span className={styles.priceLabel}>Cena za nabízený podíl</span>
+                <span className={styles.priceLabel}>Cena za podíl</span>
                 <strong className={styles.price}>{formatPrice(active.price)}</strong>
                 <p className={styles.secondaryPrice}>
                   Odhad celku <strong>{formatPrice(active.full_property_value)}</strong>

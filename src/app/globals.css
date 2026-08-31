@@ -124,9 +124,8 @@ button {
   min-height: 120px;
 }
 
-.input:invalid,
-.textarea:invalid,
-.select:invalid {
+.input:not(:placeholder-shown):invalid,
+.textarea:not(:placeholder-shown):invalid {
   border-color: #d99a9a;
 }
 
