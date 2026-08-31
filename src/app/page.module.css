@@ -6,24 +6,71 @@
 }
 
 .hero {
-  padding: 2rem 0 0;
+  padding: 0;
 }
 
-.heroSplit {
-  display: grid;
-  grid-template-columns: minmax(0, 0.62fr) minmax(320px, 0.38fr);
-  align-items: stretch;
-  border-radius: 4px;
+.heroPhoto {
+  position: relative;
+  height: 86vh;
+  min-height: 560px;
+  max-height: 820px;
   overflow: hidden;
-  box-shadow: 0 24px 48px rgba(15, 31, 61, 0.1);
+  background-color: #0f1f3d;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(201, 161, 90, 0.16), transparent 45%),
+    linear-gradient(160deg, #16294d 0%, #0f1f3d 60%, #0a1428 100%);
+  background-size: cover;
+  background-position: center;
 }
 
-.heroCopy {
-  background: #0f1f3d;
-  padding: 2.5rem 2.75rem;
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10, 20, 40, 0.55) 0%, rgba(10, 20, 40, 0.4) 32%, rgba(9, 18, 36, 0.88) 100%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-bottom: 4rem;
+  color: #faf7f0;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  padding: 0.5rem 0.95rem;
+  margin-bottom: 1.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 247, 240, 0.3);
+  background: rgba(15, 31, 61, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #faf7f0;
+}
+
+.heroBadgeDot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5);
+  animation: heroPulse 2s infinite;
+}
+
+@keyframes heroPulse {
+  0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.45); }
+  70% { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
 }
 
 .eyebrow,
@@ -36,20 +83,17 @@
   font-weight: 800;
 }
 
-.heroCopy .eyebrow {
-  color: #c9a15a;
-}
-
 .heroTitle {
   font-family: var(--font-serif);
-  font-size: clamp(2.1rem, 3vw, 2.75rem);
+  font-size: clamp(2.6rem, 5.6vw, 4.4rem);
   font-weight: 400;
-  line-height: 1.14;
+  line-height: 1.08;
   letter-spacing: -0.01em;
-  margin-bottom: 1.1rem;
-  max-width: 15ch;
+  margin-bottom: 1.25rem;
+  max-width: 16ch;
   text-wrap: balance;
   color: #faf7f0;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
 .heroSubtitle,
@@ -60,16 +104,16 @@
   max-width: 60ch;
 }
 
-.heroCopy .heroSubtitle {
-  color: #b9c2d6;
-  max-width: 42ch;
+.heroContent .heroSubtitle {
+  color: rgba(250, 247, 240, 0.85);
+  max-width: 48ch;
 }
 
 .heroActions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.85rem;
-  margin-top: 1.6rem;
+  margin-top: 1.75rem;
 }
 
 .heroPrimaryButton {
@@ -79,29 +123,22 @@
 }
 
 .heroSecondaryButton {
-  background: transparent !important;
+  background: rgba(15, 31, 61, 0.35) !important;
   color: #faf7f0 !important;
-  border-color: rgba(250, 247, 240, 0.45) !important;
+  border-color: rgba(250, 247, 240, 0.5) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .heroSecondaryButton:hover {
-  background: rgba(250, 247, 240, 0.08) !important;
-  border-color: rgba(250, 247, 240, 0.7) !important;
-}
-
-.heroAside {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(160deg, #f3eee1 0%, #ede4cd 100%);
-  padding: 1.75rem;
-}
-
-.heroAside > * {
-  width: 100%;
+  background: rgba(15, 31, 61, 0.5) !important;
+  border-color: rgba(250, 247, 240, 0.75) !important;
 }
 
 .heroStatsRow {
-  margin: 1.75rem 0 0;
+  position: relative;
+  z-index: 2;
+  margin-top: -3.25rem;
 }
 
 .proofCard,
@@ -332,17 +369,12 @@
 }
 
 @media (max-width: 1024px) {
-  .heroSplit,
   .proofGrid,
   .trustGrid,
   .faqGrid,
   .typeGrid,
   .typeStrip {
     grid-template-columns: 1fr;
-  }
-
-  .heroTitle {
-    max-width: none;
   }
 
   .investorCard {
@@ -356,26 +388,23 @@
     gap: 2.75rem;
   }
 
-  .hero {
-    padding-top: 2rem;
+  .heroPhoto {
+    height: 78vh;
+    min-height: 460px;
   }
 
-  .heroCopy {
-    padding: 2.25rem 1.5rem 2.5rem;
+  .heroContent {
+    padding-bottom: 3rem;
     text-align: center;
     align-items: center;
   }
 
-  .heroCopy .eyebrow {
-    text-align: center;
-  }
-
   .heroTitle {
-    max-width: 20ch;
+    max-width: 18ch;
   }
 
-  .heroCopy .heroSubtitle {
-    max-width: 34ch;
+  .heroContent .heroSubtitle {
+    max-width: 32ch;
   }
 
   .heroActions {
@@ -387,11 +416,10 @@
     min-width: 12rem;
   }
 
-  .heroAside {
-    padding: 1.25rem;
+  .heroStatsRow {
+    margin-top: -2.25rem;
   }
 
-  .heroCard,
   .proofCard,
   .articleCard {
     padding: 1.15rem;

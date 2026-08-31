@@ -1,11 +1,15 @@
 import { ImageResponse } from 'next/og';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
-export const runtime = 'edge';
 export const alt = 'Podilo — Tržiště spoluvlastnických podílů nemovitostí';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 export default async function OpengraphImage() {
+  const markBuffer = await readFile(join(process.cwd(), 'public/brand/podilo-mark.png'));
+  const markSrc = `data:image/png;base64,${markBuffer.toString('base64')}`;
+
   return new ImageResponse(
     (
       <div
@@ -29,21 +33,8 @@ export default async function OpengraphImage() {
             marginBottom: 48,
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              width: 56,
-              height: 56,
-              borderRadius: 10,
-              border: '2px solid #C9A15A',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 30,
-              color: '#C9A15A',
-            }}
-          >
-            P
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={markSrc} width={56} height={62} alt="" />
           <div style={{ fontSize: 32, color: '#FAF7F0' }}>Podilo</div>
         </div>
         <div

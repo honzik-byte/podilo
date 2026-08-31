@@ -20,11 +20,13 @@
 }
 
 .logo {
-  font-family: var(--font-serif);
-  font-size: 1.55rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--foreground);
+  display: inline-flex;
+  align-items: center;
+}
+
+.logoImage {
+  height: 34px;
+  width: auto;
 }
 
 .navLinks {

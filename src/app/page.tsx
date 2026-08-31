@@ -2,7 +2,6 @@ import Link from 'next/link';
 import ListingCard from '@/components/ListingCard';
 import Button from '@/components/Button';
 import HeroStats from '@/components/HeroStats';
-import HeroShowcase from '@/components/HeroShowcase';
 import { articles } from '@/lib/articleContent';
 import { getAllListings, getListingLandingTaxonomy } from '@/lib/listingQueries';
 import styles from './page.module.css';
@@ -25,35 +24,39 @@ export default async function Home() {
   const promotedListings = allListings.filter((listing) => listing.is_top || listing.is_highlighted);
   const featuredListings = (promotedListings.length > 0 ? promotedListings : allListings).slice(0, 6);
   const publishedListings = 12;
+  const heroImage = featuredListings.find((listing) => listing.images?.[0])?.images?.[0];
 
   return (
     <div className={styles.home}>
       <section className={styles.hero}>
-        <div className="container">
-          <div className={styles.heroSplit}>
-            <div className={styles.heroCopy}>
-              <p className={styles.eyebrow}>Marketplace pro spoluvlastnické podíly</p>
-              <h1 className={styles.heroTitle}>Kupujte a prodávejte podíly nemovitostí s větší jistotou</h1>
-              <p className={styles.heroSubtitle}>
-                Podilo je specializované české tržiště zaměřené pouze na spoluvlastnické podíly. Pomáhá rychle pochopit, co se prodává, za kolik a v jaké situaci se nabídka nachází.
-              </p>
-              <div className={styles.heroActions}>
-                <Link href="/add">
-                  <Button className={styles.heroPrimaryButton}>Přidat inzerát</Button>
-                </Link>
-                <Link href="/listings">
-                  <Button variant="outline" className={styles.heroSecondaryButton}>
-                    Prohlížet nabídky
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <div className={styles.heroAside}>
-              <HeroShowcase listings={featuredListings} />
+        <div
+          className={styles.heroPhoto}
+          style={heroImage ? { backgroundImage: `url(${heroImage})` } : undefined}
+        >
+          <div className={styles.heroScrim} />
+          <div className={`container ${styles.heroContent}`}>
+            <span className={styles.heroBadge}>
+              <span className={styles.heroBadgeDot} />
+              Živé tržiště · {publishedListings}+ nabídek
+            </span>
+            <h1 className={styles.heroTitle}>Kupujte a prodávejte podíly nemovitostí s větší jistotou</h1>
+            <p className={styles.heroSubtitle}>
+              Ověřené nabídky spoluvlastnických podílů, jasná dokumentace a přímé spojení s vlastníkem — bez zbytečných zprostředkovatelů.
+            </p>
+            <div className={styles.heroActions}>
+              <Link href="/add">
+                <Button className={styles.heroPrimaryButton}>Přidat inzerát</Button>
+              </Link>
+              <Link href="/listings">
+                <Button variant="outline" className={styles.heroSecondaryButton}>
+                  Prohlížet nabídky
+                </Button>
+              </Link>
             </div>
           </div>
+        </div>
 
+        <div className="container">
           <div className={styles.heroStatsRow}>
             <HeroStats publishedListings={publishedListings} />
           </div>

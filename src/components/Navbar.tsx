@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
@@ -62,7 +63,7 @@ export default function Navbar() {
     <header className={styles.header}>
       <div className={`container ${styles.navContainer}`}>
         <Link href="/" className={styles.logo} onClick={closeMenu}>
-          Podilo
+          <Image src="/brand/podilo-logo.png" alt="Podilo" width={2172} height={724} priority className={styles.logoImage} />
         </Link>
         <button
           type="button"
