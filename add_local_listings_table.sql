@@ -34,6 +34,11 @@ CREATE TABLE IF NOT EXISTS public.local_listings (
 -- (see src/lib/localListings.ts), so RLS stays enabled with no public policies.
 ALTER TABLE public.local_listings ENABLE ROW LEVEL SECURITY;
 
+-- Not queried by user_id yet, but indexed up front so a future
+-- "my local listings" view doesn't need a table scan.
+CREATE INDEX IF NOT EXISTS idx_local_listings_user_id
+  ON public.local_listings (user_id);
+
 -- One-time migration of any rows still sitting in the old JSON file:
 -- run `select * from public.local_listings;` afterwards to confirm it's empty,
 -- then src/data/localListings.json can be deleted.

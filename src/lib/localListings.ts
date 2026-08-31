@@ -90,9 +90,15 @@ function recordToRow(record: LocalListingRecord) {
   };
 }
 
+const MAX_LOCAL_LISTINGS = 200;
+
 async function readLocalListingRecords() {
   const adminClient = createServerSupabaseAdmin();
-  const { data, error } = await adminClient.from('local_listings').select('*');
+  const { data, error } = await adminClient
+    .from('local_listings')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(MAX_LOCAL_LISTINGS);
 
   if (error) {
     console.error('[LocalListings] Failed to load local listings', { error });
