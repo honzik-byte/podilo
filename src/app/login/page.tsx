@@ -5,7 +5,6 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Link from 'next/link';
-import WhyRegisterCard from '@/components/WhyRegisterCard';
 import styles from '../auth.module.css';
 
 export default function LoginPage() {
@@ -48,9 +47,6 @@ export default function LoginPage() {
             <li>Telefonní kontakt na prodávajícího</li>
             <li>Správa vlastních inzerátů na jednom místě</li>
           </ul>
-          <div style={{ marginTop: '1.5rem' }}>
-            <WhyRegisterCard compact title="Ještě účet nemáte?" />
-          </div>
         </div>
 
         <form onSubmit={handleLogin} className={styles.formCard}>

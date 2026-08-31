@@ -1,23 +1,27 @@
 .page {
   max-width: 1080px;
+  min-height: calc(100vh - 21rem);
   margin: 0 auto;
   padding: 4.5rem 1.5rem 5rem;
+  display: flex;
+  align-items: center;
 }
 
 .layout {
+  width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.8fr);
   gap: 1.5rem;
-  align-items: start;
+  align-items: center;
 }
 
 .intro,
 .formCard {
   padding: 1.75rem;
-  border-radius: 1.5rem;
+  border-radius: 6px;
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+  background: linear-gradient(180deg, #ffffff 0%, #f8f4ea 100%);
+  box-shadow: 0 16px 40px rgba(15, 31, 61, 0.06);
 }
 
 .eyebrow {
@@ -61,20 +65,23 @@
 .error,
 .success {
   padding: 1rem;
-  border-radius: 1rem;
+  border-radius: 6px;
   margin-bottom: 1.25rem;
   font-size: 0.92rem;
   line-height: 1.6;
+  border: 1px solid transparent;
 }
 
 .error {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-color: #e6c3ba;
 }
 
 .success {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: #c3dbc9;
 }
 
 .footerText {
@@ -102,7 +109,6 @@
   .intro,
   .formCard {
     padding: 1.15rem;
-    border-radius: 1.2rem;
   }
 
   .title {
