@@ -34,7 +34,7 @@ export default async function OpengraphImage() {
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={markSrc} width={56} height={62} alt="" />
+          <img src={markSrc} width={56} height={56} alt="" />
           <div style={{ fontSize: 32, color: '#FAF7F0' }}>Podilo</div>
         </div>
         <div
