@@ -135,12 +135,6 @@
   border-color: rgba(250, 247, 240, 0.75) !important;
 }
 
-.heroStatsRow {
-  position: relative;
-  z-index: 2;
-  margin-top: -3.25rem;
-}
-
 .proofCard,
 .articleCard {
   background: rgba(255, 255, 255, 0.96);
@@ -414,10 +408,6 @@
   .heroPrimaryButton,
   .heroSecondaryButton {
     min-width: 12rem;
-  }
-
-  .heroStatsRow {
-    margin-top: -2.25rem;
   }
 
   .proofCard,

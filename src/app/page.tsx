@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import ListingCard from '@/components/ListingCard';
 import Button from '@/components/Button';
-import HeroStats from '@/components/HeroStats';
 import { articles } from '@/lib/articleContent';
 import { getAllListings, getListingLandingTaxonomy } from '@/lib/listingQueries';
 import styles from './page.module.css';
@@ -53,12 +52,6 @@ export default async function Home() {
                 </Button>
               </Link>
             </div>
-          </div>
-        </div>
-
-        <div className="container">
-          <div className={styles.heroStatsRow}>
-            <HeroStats publishedListings={publishedListings} />
           </div>
         </div>
       </section>
