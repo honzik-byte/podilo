@@ -23,9 +23,12 @@ export default function ListingImageManager({
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const initialImagesKey = initialImages.join('|');
+
   useEffect(() => {
     setImages(initialImages);
-  }, [initialImages]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialImagesKey]);
 
   const validateImageDimensions = async (file: File) =>
     new Promise<void>((resolve, reject) => {
