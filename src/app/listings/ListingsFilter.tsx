@@ -67,6 +67,7 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
   const [highlightedOnly, setHighlightedOnly] = useState(searchParams.get('highlightedOnly') === 'true');
   const [showAdvanced, setShowAdvanced] = useState(hasAnyAdvancedFilters(searchParams));
   const [savedFilters, setSavedFilters] = useState<SavedFilter[]>([]);
+  const [activeThumb, setActiveThumb] = useState<'min' | 'max' | null>(null);
 
   const createQueryString = useCallback(
     (params: Record<string, string | null>) => {
@@ -329,7 +330,15 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
               <span>{minPriceValue > 0 ? `Od ${formatCzechCurrency(minPriceValue)}` : 'Od 0 Kč'}</span>
               <span>{`Do ${formatCzechCurrency(maxPriceValue)}`}</span>
             </div>
-            <div className={styles.rangeTrack} />
+            <div className={styles.rangeTrack}>
+              <div
+                className={styles.rangeTrackFill}
+                style={{
+                  left: `${(minPriceValue / safeMaxPriceCap) * 100}%`,
+                  right: `${100 - (maxPriceValue / safeMaxPriceCap) * 100}%`,
+                }}
+              />
+            </div>
             <div className={styles.rangeSliders}>
               <input
                 type="range"
@@ -341,7 +350,9 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
                   const nextValue = clampPrice(Number(event.target.value), 0, maxPriceValue);
                   setMinPrice(String(nextValue));
                 }}
+                onPointerDown={() => setActiveThumb('min')}
                 className={styles.rangeInput}
+                style={{ zIndex: activeThumb === 'min' ? 5 : 3 }}
               />
               <input
                 type="range"
@@ -353,7 +364,9 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
                   const nextValue = clampPrice(Number(event.target.value), minPriceValue, safeMaxPriceCap);
                   setMaxPrice(nextValue >= safeMaxPriceCap ? '' : String(nextValue));
                 }}
+                onPointerDown={() => setActiveThumb('max')}
                 className={styles.rangeInput}
+                style={{ zIndex: activeThumb === 'max' ? 5 : 4 }}
               />
             </div>
           </div>
