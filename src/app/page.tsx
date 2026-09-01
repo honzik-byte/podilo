@@ -22,7 +22,6 @@ export default async function Home() {
   ]);
   const promotedListings = allListings.filter((listing) => listing.is_top || listing.is_highlighted);
   const featuredListings = (promotedListings.length > 0 ? promotedListings : allListings).slice(0, 6);
-  const publishedListings = 12;
   const heroImage = featuredListings.find((listing) => listing.images?.[0])?.images?.[0];
 
   return (
@@ -34,10 +33,6 @@ export default async function Home() {
         >
           <div className={styles.heroScrim} />
           <div className={`container ${styles.heroContent}`}>
-            <span className={styles.heroBadge}>
-              <span className={styles.heroBadgeDot} />
-              Živé tržiště · {publishedListings}+ nabídek
-            </span>
             <h1 className={styles.heroTitle}>Kupujte a prodávejte podíly nemovitostí s větší jistotou</h1>
             <p className={styles.heroSubtitle}>
               Ověřené nabídky spoluvlastnických podílů, jasná dokumentace a přímé spojení s vlastníkem — bez zbytečných zprostředkovatelů.
