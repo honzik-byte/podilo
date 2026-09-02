@@ -13,12 +13,13 @@ interface FavoriteButtonProps {
 
 export default function FavoriteButton({ listingId, variant = 'overlay' }: FavoriteButtonProps) {
   const router = useRouter();
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [storedFavorite, setStoredFavorite] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isFavorite = isLoggedIn && storedFavorite;
 
   useEffect(() => {
     const sync = () => {
-      setIsFavorite(readFavorites().includes(listingId));
+      setStoredFavorite(readFavorites().includes(listingId));
     };
 
     sync();
@@ -53,7 +54,7 @@ export default function FavoriteButton({ listingId, variant = 'overlay' }: Favor
 
     const wasFavorite = readFavorites().includes(listingId);
     const nextFavorites = toggleFavorite(listingId);
-    setIsFavorite(nextFavorites.includes(listingId));
+    setStoredFavorite(nextFavorites.includes(listingId));
     const visitorId = getOrCreateFavoritesVisitorId();
 
     void fetch(`/api/favorite-stats/${listingId}`, {
