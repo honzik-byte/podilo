@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ListingCard from '@/components/ListingCard';
 import Button from '@/components/Button';
-import { articles } from '@/lib/articleContent';
+import { articles, getReadingTime } from '@/lib/articleContent';
 import { getAllListings, getListingLandingTaxonomy } from '@/lib/listingQueries';
 import styles from './page.module.css';
 
@@ -147,7 +147,7 @@ export default async function Home() {
             <Link key={article.slug} href={`/poradna/${article.slug}`} className={styles.articleCard}>
               <div className={styles.articleMeta}>
                 <span>{article.category}</span>
-                <span>{article.readTime}</span>
+                <span>{getReadingTime(article)}</span>
               </div>
               <h3>{article.title}</h3>
               <p>{article.excerpt}</p>
