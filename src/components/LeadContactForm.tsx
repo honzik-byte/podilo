@@ -21,7 +21,8 @@ export default function LeadContactForm({ listingId, listingTitle }: LeadContact
     setMessage('');
     setError('');
 
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const phone = String(formData.get('phone') || '');
 
     if (phone && !isValidListingPhone(phone)) {
@@ -46,13 +47,14 @@ export default function LeadContactForm({ listingId, listingTitle }: LeadContact
       });
 
       if (!response.ok) {
-        throw new Error('Poptávku se nepodařilo odeslat.');
+        throw new Error(`Odeslání poptávky selhalo se stavem ${response.status}.`);
       }
 
-      event.currentTarget.reset();
+      form.reset();
       setMessage(`Poptávka k nabídce „${listingTitle}“ byla odeslána.`);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : 'Poptávku se nepodařilo odeslat.');
+      console.error('[podilo] Odeslání poptávky selhalo:', submitError);
+      setError('Poptávku se nepodařilo odeslat. Zkuste to prosím znovu, nebo napište na podpora@podilo.cz.');
     } finally {
       setSubmitting(false);
     }
