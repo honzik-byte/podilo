@@ -1,5 +1,5 @@
 .page {
-  padding: 4.5rem 0 6rem;
+  padding-block: 4.5rem 6rem;
   display: grid;
   gap: 3.5rem;
 }
@@ -255,7 +255,7 @@
 
 @media (max-width: 640px) {
   .page {
-    padding: 3rem 0 4.5rem;
+    padding-block: 3rem 4.5rem;
     gap: 2.5rem;
   }
 

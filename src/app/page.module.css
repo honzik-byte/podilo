@@ -323,8 +323,21 @@
 }
 
 @media (max-width: 720px) {
+  /* On a 390px column every section is the same width, so the only thing
+     separating them is vertical space. At 2.75rem it sat too close to the
+     1rem gap between cards and the whole page read as one stack. */
   .home {
-    gap: 2.75rem;
+    gap: 4rem;
+  }
+
+  .sectionHeader,
+  .sectionHeaderSimple {
+    margin-bottom: 1.75rem;
+  }
+
+  .proofNote {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
   }
 
   .heroPhoto {
