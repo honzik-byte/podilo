@@ -3,8 +3,13 @@ import { activatePromotionWithUserAccessToken } from '@/lib/promotionActivation'
 import { reportError } from '@/lib/errorReporting';
 import { createServerSupabaseAuth } from '@/lib/serverSupabase';
 import { getStripeClient } from '@/lib/stripeServer';
+import { paymentsEnabled, paymentsDisabledMessage } from '@/lib/paymentsEnabled';
 
 export async function POST(request: Request) {
+  if (!paymentsEnabled) {
+    return NextResponse.json({ error: paymentsDisabledMessage }, { status: 503 });
+  }
+
   try {
     const authorization = request.headers.get('authorization');
     const token = authorization?.replace(/^Bearer\s+/i, '');

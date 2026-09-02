@@ -509,13 +509,13 @@ export default function AddListingForm() {
           </div>
           <div className={styles.promotionCard}>
             <div className={styles.promotionCopy}>
-              <strong>Zvýšení viditelnosti můžete zapnout hned po zveřejnění</strong>
+              <strong>Placené zvýšení viditelnosti připravujeme</strong>
               <p>
-                TOP pozice nebo zvýraznění pomohou dostat nabídku výš ve výpisu, ale necháváme to jako volitelný krok až po publikaci.
+                TOP pozice a zvýraznění zatím v beta verzi nejsou spuštěné. Inzerát teď zveřejníte úplně zdarma.
               </p>
             </div>
             <Link href="/cenik" className={styles.promotionLink}>
-              Zobrazit možnosti
+              Zjistit víc
             </Link>
           </div>
         </div>

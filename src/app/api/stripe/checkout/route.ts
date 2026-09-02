@@ -2,9 +2,14 @@ import { NextResponse } from 'next/server';
 import { getPromotionPlan } from '@/lib/promotionPlans';
 import { createServerSupabaseAdmin, createServerSupabaseAuth } from '@/lib/serverSupabase';
 import { getStripeClient } from '@/lib/stripeServer';
+import { paymentsEnabled, paymentsDisabledMessage } from '@/lib/paymentsEnabled';
 import { Listing } from '@/types';
 
 export async function POST(request: Request) {
+  if (!paymentsEnabled) {
+    return NextResponse.json({ error: paymentsDisabledMessage }, { status: 503 });
+  }
+
   try {
     const authorization = request.headers.get('authorization');
     const token = authorization?.replace(/^Bearer\s+/i, '');

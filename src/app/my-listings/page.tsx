@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { Listing } from '@/types';
 import ListingCard from '@/components/ListingCard';
 import { getListingQualityChecklist } from '@/lib/listingQuality';
+import { paymentsEnabled } from '@/lib/paymentsEnabled';
 import styles from './page.module.css';
 
 interface LeadSummary {
@@ -139,12 +140,16 @@ export default function MyListingsPage() {
                       {listing.is_top ? <span className={styles.liveBadge}>TOP aktivní</span> : null}
                       {listing.is_highlighted ? <span className={styles.liveBadgeAlt}>Zvýraznění aktivní</span> : null}
                       {!listing.is_top && !listing.is_highlighted ? (
-                        <span className={styles.idleBadge}>Bez propagace</span>
+                        <span className={styles.idleBadge}>
+                          {paymentsEnabled ? 'Bez propagace' : 'Připravujeme'}
+                        </span>
                       ) : null}
                     </div>
                   </div>
                   <p className={styles.panelText}>
-                    Když chceš víc zobrazení nebo rychlejší reakce, zapni na 7 dní TOP pozici nebo zvýraznění.
+                    {paymentsEnabled
+                      ? 'Když chceš víc zobrazení nebo rychlejší reakce, zapni na 7 dní TOP pozici nebo zvýraznění.'
+                      : 'Placené TOP pozice a zvýraznění zatím v beta verzi nejsou spuštěné. Pracujeme na tom.'}
                   </p>
                   {(listing.top_until || listing.highlighted_until) && (
                     <p className={styles.promotionEnds}>
@@ -154,7 +159,7 @@ export default function MyListingsPage() {
                   )}
                   <div className={styles.metaActions}>
                     <Link href={`/cenik?listing=${listing.id}`} className={styles.secondaryLink}>
-                      Zviditelnit
+                      {paymentsEnabled ? 'Zviditelnit' : 'Zjistit víc'}
                     </Link>
                     <Link href={`/admin/edit/${listing.id}`} className={styles.editLink}>
                       Upravit

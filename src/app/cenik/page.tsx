@@ -1,6 +1,7 @@
 import styles from './page.module.css';
 import Link from 'next/link';
 import PricingCheckout from './PricingCheckout';
+import { paymentsEnabled } from '@/lib/paymentsEnabled';
 
 interface PricingPageProps {
   searchParams: Promise<{ listing?: string; cancelled?: string }>;
@@ -18,11 +19,25 @@ export default async function PricingPage({ searchParams }: PricingPageProps) {
         </p>
       </div>
 
-      <PricingCheckout
-        initialListingId={resolvedParams.listing}
-        cancelled={resolvedParams.cancelled === '1'}
-        selectorMode="header"
-      />
+      {paymentsEnabled ? (
+        <PricingCheckout
+          initialListingId={resolvedParams.listing}
+          cancelled={resolvedParams.cancelled === '1'}
+          selectorMode="header"
+        />
+      ) : (
+        <div className={styles.selectorCard}>
+          <div className={styles.selectorCardHeader}>
+            <p className={styles.selectorEyebrow}>Připravujeme</p>
+            <h2 className={styles.selectorTitle}>Placené zvýraznění zatím nespouštíme</h2>
+          </div>
+          <p className={styles.selectorText}>
+            Podilo teď běží jako beta verze. TOP pozice a zvýraznění inzerátů zatím nejde zaplatit — pořádně to
+            doděláváme, aby to dávalo smysl a fungovalo spolehlivě. Jakmile bude placené zvýraznění dostupné,
+            dáme to jasně vědět všem uživatelům s aktivním inzerátem.
+          </p>
+        </div>
+      )}
 
       <div className={styles.disclaimerBox}>
         <p className={styles.disclaimerText}>
