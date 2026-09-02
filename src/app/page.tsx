@@ -17,7 +17,7 @@ const articleHighlights = [
   .filter((article): article is NonNullable<typeof article> => Boolean(article));
 
 export default async function Home() {
-  const [allListings, { propertyTypes }] = await Promise.all([
+  const [allListings, { propertyTypes, regions }] = await Promise.all([
     getAllListings(),
     getListingLandingTaxonomy(),
   ]);
@@ -64,17 +64,21 @@ export default async function Home() {
         <div className={styles.proofGrid}>
           <div className={styles.proofCard}>
             <strong>Bez provize</strong>
-            <p>Podilo není realitní kancelář ani broker. Je to čisté tržiště pro konkrétní segment trhu.</p>
+            <p>Podilo není realitní kancelář ani broker. Je to inzertní tržiště pro jeden konkrétní segment trhu.</p>
+          </div>
+          <div className={styles.proofCard}>
+            <strong>Přímo s vlastníkem</strong>
+            <p>Zájemce komunikuje rovnou s prodávajícím. Nevyjednáváme za strany ani nezasahujeme do podmínek dohody.</p>
           </div>
           <div className={styles.proofCard}>
             <strong>Investor kontext</strong>
-            <p>Vedle ceny podílu vidíte i odhad celku, obsazenost a další podklady pro rychlejší rozhodnutí.</p>
-          </div>
-          <div className={styles.proofCard}>
-            <strong>Přímé spojení</strong>
-            <p>Zájemce komunikuje přímo s prodávajícím, bez složitého zprostředkování a bez zbytečného šumu.</p>
+            <p>Vedle ceny podílu vidíte odhad hodnoty celku, obsazenost i další podklady pro rychlejší rozhodnutí.</p>
           </div>
         </div>
+        <p className={styles.proofNote}>
+          U vybraných nabídek ověřujeme, že kontakt patří skutečnému zadavateli. Není to právní
+          garance transakce, ale vyšší jistota, že píšete tomu, komu podíl skutečně patří.
+        </p>
       </section>
 
       <section className={`container ${styles.feedSection}`}>
@@ -96,36 +100,28 @@ export default async function Home() {
             {featuredListings.map((listing) => (
               <ListingCard key={listing.id} listing={listing} />
             ))}
+            {/* With only a handful of listings the grid would leave a wide empty
+                gap, so the remaining space asks for supply instead. */}
+            {featuredListings.length < 3 && (
+              <Link href="/add" className={styles.addCard}>
+                <span className={styles.addCardEyebrow}>Máte podíl k prodeji?</span>
+                <strong className={styles.addCardTitle}>Přidejte svůj inzerát</strong>
+                <p className={styles.addCardText}>
+                  Zveřejnění je zdarma a zabere pár minut. Nabídku uvidí lidé, kteří se o
+                  spoluvlastnické podíly zajímají cíleně.
+                </p>
+                <span className={styles.addCardCta}>Přidat inzerát →</span>
+              </Link>
+            )}
           </div>
         ) : (
           <div className={styles.emptyState}>
             <p>Zatím zde nejsou žádné inzeráty. Buďte první, kdo nabídne svůj podíl.</p>
+            <Link href="/add" className={styles.emptyStateLink}>
+              Přidat inzerát →
+            </Link>
           </div>
         )}
-      </section>
-
-      <section className={`container ${styles.trustSection}`}>
-        <div className={styles.sectionHeaderSimple}>
-          <div>
-            <p className={styles.sectionEyebrow}>Důvěra a ověření</p>
-            <h2 className={styles.sectionTitle}>Jasně oddělujeme roli platformy, ověření kontaktu a samotný obchod</h2>
-          </div>
-        </div>
-
-        <div className={styles.trustGrid}>
-          <div className={styles.trustCard}>
-            <strong>Ověřený kontakt</strong>
-            <p>U vybraných nabídek ověřujeme, že kontakt patří skutečnému zadavateli nabídky. Neznamená to právní garanci transakce, ale silnější důvěryhodnost inzerátu.</p>
-          </div>
-          <div className={styles.trustCard}>
-            <strong>Přímý kontakt bez prostředníka</strong>
-            <p>Zájemce komunikuje přímo s prodávajícím. Podilo nepřebírá roli makléře, nevyjednává za strany a nezasahuje do podmínek dohody.</p>
-          </div>
-          <div className={styles.trustCard}>
-            <strong>Podilo jako specializované tržiště</strong>
-            <p>Soustředíme se na srozumitelnost ceny podílu, kontext nabídky a lepší orientaci na trhu se spoluvlastnickými podíly.</p>
-          </div>
-        </div>
       </section>
 
       <section className={`container ${styles.educationSection}`}>
@@ -155,17 +151,37 @@ export default async function Home() {
           ))}
         </div>
 
-        {propertyTypes.length > 0 && (
-          <div className={styles.typeStrip}>
-            {propertyTypes.slice(0, 4).map((propertyType) => (
-              <Link key={propertyType.slug} href={`/typ-nemovitosti/${propertyType.slug}`} className={styles.typeStripLink}>
+      </section>
+
+      {(propertyTypes.length > 0 || regions.length > 0) && (
+        <section className={`container ${styles.browseSection}`}>
+          <div className={styles.sectionHeaderSimple}>
+            <div>
+              <p className={styles.sectionEyebrow}>Procházet dál</p>
+              <h2 className={styles.sectionTitle}>Podíly podle typu nemovitosti a regionu</h2>
+            </div>
+          </div>
+
+          <div className={styles.chips}>
+            {propertyTypes.slice(0, 5).map((propertyType) => (
+              <Link
+                key={propertyType.slug}
+                href={`/typ-nemovitosti/${propertyType.slug}`}
+                className={styles.chip}
+              >
                 <span>{propertyType.label}</span>
-                <strong>{propertyType.count} nabídek</strong>
+                <strong>{propertyType.count}</strong>
+              </Link>
+            ))}
+            {regions.slice(0, 5).map((region) => (
+              <Link key={region.slug} href={`/lokality/${region.slug}`} className={styles.chip}>
+                <span>{region.name}</span>
+                <strong>{region.count}</strong>
               </Link>
             ))}
           </div>
-        )}
-      </section>
+        </section>
+      )}
     </div>
   );
 }

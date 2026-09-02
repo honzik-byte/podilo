@@ -13,6 +13,7 @@ import {
   parseListing,
 } from '@/lib/listingMetadata';
 import { sortListings } from '@/lib/listingSort';
+import { formatMatchingListingCount } from '@/lib/formatting';
 
 const ListingsMap = dynamic(() => import('@/components/ListingsMap'), {
   ssr: false,
@@ -133,7 +134,7 @@ export default function ListingsClientView({
           Mapa
         </button>
         <div className={styles.resultCount}>
-          {filteredListings.length} odpovídajících nabídek
+          {formatMatchingListingCount(filteredListings.length)}
         </div>
       </div>
 

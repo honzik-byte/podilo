@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ListingCard from '@/components/ListingCard';
 import { getListingLandingTaxonomy, getListingsByPropertyTypeSlug } from '@/lib/listingQueries';
+import { formatActiveListingCount } from '@/lib/formatting';
 import styles from '@/app/discovery.module.css';
 
 export async function generateStaticParams() {
@@ -47,7 +48,7 @@ export default async function PropertyTypeLandingPage({ params }: { params: Prom
           Programatický přehled nabídek podle typu nemovitosti pomáhá rychleji srovnat byty, domy, pozemky i komerční objekty.
         </p>
         <div className={styles.meta}>
-          <span className={styles.metaBadge}>{listings.length} aktivních nabídek</span>
+          <span className={styles.metaBadge}>{formatActiveListingCount(listings.length)}</span>
           <Link href="/listings" className={styles.metaBadge}>
             Otevřít hlavní výpis
           </Link>

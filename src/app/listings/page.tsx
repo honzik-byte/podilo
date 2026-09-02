@@ -1,6 +1,7 @@
 import styles from './page.module.css';
 import ListingsClientView from './ListingsClientView';
 import { getAllListings } from '@/lib/listingQueries';
+import { czechPlural } from '@/lib/formatting';
 
 export const metadata = {
   title: 'Nabídky spoluvlastnických podílů nemovitostí | Podilo',
@@ -34,7 +35,14 @@ export default async function ListingsPage({ searchParams }: PageProps) {
 
           <div className={styles.headerNote}>
             <strong>{displayListings.length}</strong>
-            <span>aktivních nabídek</span>
+            <span>
+              {czechPlural(
+                displayListings.length,
+                'aktivní nabídka',
+                'aktivní nabídky',
+                'aktivních nabídek'
+              )}
+            </span>
           </div>
         </div>
       </div>

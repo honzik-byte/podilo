@@ -169,34 +169,6 @@
   gap: 1rem;
 }
 
-.typeStrip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.9rem;
-  margin-top: 1.25rem;
-}
-
-.typeStripLink {
-  display: grid;
-  gap: 0.2rem;
-  padding: 1rem 1.1rem;
-  border-radius: 1.2rem;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
-}
-
-.typeStripLink span {
-  font-weight: 800;
-  color: var(--foreground);
-}
-
-.typeStripLink strong {
-  color: var(--muted-text);
-  font-size: 0.92rem;
-  font-weight: 600;
-}
-
 .trustGrid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -409,4 +381,109 @@
   .investorCard {
     padding: 1.15rem;
   }
+}
+
+/* ---- note under the value cards (replaces the old duplicate trust grid) ---- */
+.proofNote {
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted-text);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  max-width: 78ch;
+}
+
+/* ---- supply prompt filling a thin listings row ---- */
+.addCard {
+  /* Only as tall as its content - stretching it to the listing card's height
+     left a large void between the text and the link. */
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem;
+  border-radius: 1.5rem;
+  border: 1px dashed var(--border);
+  background: rgba(255, 255, 255, 0.55);
+  transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.addCard:hover {
+  border-color: var(--brass);
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateY(-2px);
+}
+
+.addCardEyebrow {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+}
+
+.addCardTitle {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0.7rem 0 0.6rem;
+}
+
+.addCardText {
+  color: var(--muted-text);
+  line-height: 1.75;
+  font-size: 0.96rem;
+}
+
+.addCardCta {
+  padding-top: 1.1rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.emptyStateLink {
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: 700;
+}
+
+/* ---- browse by type / region ---- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.85rem;
+  padding: 0 1.05rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.chip:hover {
+  border-color: var(--brass);
+  transform: translateY(-1px);
+}
+
+.chip strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.65rem;
+  height: 1.65rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--muted-text);
 }

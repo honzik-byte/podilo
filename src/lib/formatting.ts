@@ -10,6 +10,39 @@ export function formatCzechCurrency(value?: number | null) {
   }).format(Number(value));
 }
 
+/**
+ * Czech takes three plural forms: 1, 2-4, and 0 or 5+. Writing "1 nabídek"
+ * reads as broken to a native speaker, so counts always go through here.
+ */
+export function czechPlural(count: number, one: string, few: string, many: string) {
+  if (count === 1) {
+    return one;
+  }
+
+  if (count >= 2 && count <= 4) {
+    return few;
+  }
+
+  return many;
+}
+
+export function formatListingCount(count: number) {
+  return `${count} ${czechPlural(count, 'nabídka', 'nabídky', 'nabídek')}`;
+}
+
+export function formatActiveListingCount(count: number) {
+  return `${count} ${czechPlural(count, 'aktivní nabídka', 'aktivní nabídky', 'aktivních nabídek')}`;
+}
+
+export function formatMatchingListingCount(count: number) {
+  return `${count} ${czechPlural(
+    count,
+    'odpovídající nabídka',
+    'odpovídající nabídky',
+    'odpovídajících nabídek'
+  )}`;
+}
+
 export function formatCzechPhone(phone?: string | null) {
   if (!phone) {
     return 'Neuvedeno';
