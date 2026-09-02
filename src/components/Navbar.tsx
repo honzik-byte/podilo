@@ -63,7 +63,15 @@ export default function Navbar() {
     <header className={styles.header}>
       <div className={`container ${styles.navContainer}`}>
         <Link href="/" className={styles.logo} onClick={closeMenu}>
-          <Image src="/brand/podilo-logo.png" alt="Podilo" width={1645} height={496} priority className={styles.logoImage} />
+          <Image
+            src="/brand/podilo-logo.png"
+            alt="Podilo"
+            width={1645}
+            height={496}
+            sizes="150px"
+            priority
+            className={styles.logoImage}
+          />
         </Link>
         <button
           type="button"

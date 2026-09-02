@@ -23,6 +23,11 @@
   background-position: center;
 }
 
+.heroImage {
+  object-fit: cover;
+  object-position: center;
+}
+
 .heroScrim {
   position: absolute;
   inset: 0;

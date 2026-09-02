@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import ListingCard from '@/components/ListingCard';
 import Button from '@/components/Button';
 import { articles } from '@/lib/articleContent';
@@ -27,10 +28,18 @@ export default async function Home() {
   return (
     <div className={styles.home}>
       <section className={styles.hero}>
-        <div
-          className={styles.heroPhoto}
-          style={heroImage ? { backgroundImage: `url(${heroImage})` } : undefined}
-        >
+        <div className={styles.heroPhoto}>
+          {heroImage && (
+            <Image
+              src={heroImage}
+              alt=""
+              fill
+              sizes="100vw"
+              quality={60}
+              priority
+              className={styles.heroImage}
+            />
+          )}
           <div className={styles.heroScrim} />
           <div className={`container ${styles.heroContent}`}>
             <h1 className={styles.heroTitle}>Kupujte a prodávejte podíly nemovitostí s větší jistotou</h1>

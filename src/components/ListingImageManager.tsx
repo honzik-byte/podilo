@@ -174,6 +174,7 @@ export default function ListingImageManager({
                   src={image}
                   alt={`Fotografie ${index + 1}`}
                   className={styles.image}
+                  sizes="(max-width: 640px) 50vw, 240px"
                   fallbackSrc="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%20viewBox%3D%220%200%20800%20600%22%3E%3Crect%20width%3D%22800%22%20height%3D%22600%22%20fill%3D%22%23ececf1%22%2F%3E%3C%2Fsvg%3E"
                 />
                 {index === 0 && <span className={styles.coverBadge}>Titulní foto</span>}
