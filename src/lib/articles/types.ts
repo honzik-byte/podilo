@@ -3,6 +3,7 @@ export const ARTICLE_CATEGORIES = [
   'Pro prodávající',
   'Pro kupující',
   'Ocenění',
+  'Vypořádání',
   'Investor',
 ] as const;
 
