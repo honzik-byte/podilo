@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import type { EmailOtpType } from '@supabase/supabase-js';
@@ -23,42 +23,61 @@ function parseType(raw: string | null): EmailOtpType | null {
 function ConfirmContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [state, setState] = useState<'verifying' | 'success' | 'error'>('verifying');
-  // Supabase invalidates the token on first use, so React's double-invoked
-  // effects in development must not fire the request twice.
-  const startedRef = useRef(false);
+  const [state, setState] = useState<'ready' | 'verifying' | 'success' | 'error'>('ready');
+
+  const tokenHash = searchParams.get('token_hash');
+  const type = parseType(searchParams.get('type'));
 
   useEffect(() => {
-    if (startedRef.current) {
-      return;
+    if (!tokenHash || !type) {
+      setState('error');
     }
-    startedRef.current = true;
+  }, [tokenHash, type]);
 
-    const tokenHash = searchParams.get('token_hash');
-    const type = parseType(searchParams.get('type'));
-
+  // Deliberately behind a click: mail providers (iCloud among them) prefetch
+  // links to scan them, and the token is single-use - verifying on page load
+  // lets the scanner burn it before the recipient ever gets there.
+  const handleConfirm = async () => {
     if (!tokenHash || !type) {
       setState('error');
       return;
     }
 
-    supabase.auth
-      .verifyOtp({ token_hash: tokenHash, type })
-      .then(({ error }) => {
-        if (error) {
-          console.error('[podilo] Ověření e-mailu selhalo:', error.message);
-          setState('error');
-          return;
-        }
+    setState('verifying');
 
-        setState('success');
-        router.refresh();
-      })
-      .catch((verifyError) => {
-        console.error('[podilo] Ověření e-mailu selhalo:', verifyError);
+    try {
+      const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+
+      if (error) {
+        console.error('[podilo] Ověření e-mailu selhalo:', error.message);
         setState('error');
-      });
-  }, [router, searchParams]);
+        return;
+      }
+
+      setState('success');
+      router.refresh();
+    } catch (verifyError) {
+      console.error('[podilo] Ověření e-mailu selhalo:', verifyError);
+      setState('error');
+    }
+  };
+
+  if (state === 'ready') {
+    return (
+      <div className={styles.page}>
+        <span className={styles.eyebrow}>Poslední krok</span>
+        <h1 className={styles.title}>Potvrďte svůj e-mail</h1>
+        <p className={styles.text}>
+          Kliknutím dokončíte registraci na Podilo a rovnou vás přihlásíme.
+        </p>
+        <div className={styles.actions}>
+          <button type="button" onClick={handleConfirm} className={styles.primaryLink}>
+            Potvrdit e-mail
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (state === 'verifying') {
     return (
@@ -117,7 +136,7 @@ export default function ConfirmPage() {
       fallback={
         <div className={styles.page}>
           <div className={styles.spinner} />
-          <h1 className={styles.title}>Ověřujeme váš e-mail</h1>
+          <h1 className={styles.title}>Načítáme potvrzení</h1>
         </div>
       }
     >
