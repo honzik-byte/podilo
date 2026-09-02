@@ -151,6 +151,8 @@ export default function ListingDetailClient({ listing, relatedListings }: Listin
                   src={activeImage}
                   alt={listing.title}
                   className={styles.image}
+                  sizes="(max-width: 900px) 100vw, 680px"
+                  priority
                   fallbackSrc="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20viewBox%3D%220%200%20800%20600%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22800%22%20height%3D%22600%22%20fill%3D%22%23ececf1%22%2F%3E%3Ctext%20x%3D%22400%22%20y%3D%22300%22%20fill%3D%22%23999999%22%20font-family%3D%22sans-serif%22%20font-size%3D%2224%22%20text-anchor%3D%22middle%22%3ENen%C3%AD%20fotografie%3C%2Ftext%3E%3C%2Fsvg%3E"
                 />
               </div>
@@ -164,11 +166,14 @@ export default function ListingDetailClient({ listing, relatedListings }: Listin
                       className={styles.thumbnailWrapper}
                       data-active={activeImage === image}
                       onClick={() => setActiveImage(image)}
+                      aria-label={`Zobrazit fotku ${index + 1} z ${listing.images?.length ?? 0}`}
+                      aria-pressed={activeImage === image}
                     >
                       <ClientImage
                         src={image}
                         alt={`${listing.title} - foto ${index + 1}`}
                         className={styles.thumbnailImage}
+                        sizes="120px"
                         fallbackSrc="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20viewBox%3D%220%200%20800%20600%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22800%22%20height%3D%22600%22%20fill%3D%22%23ececf1%22%2F%3E%3C%2Fsvg%3E"
                       />
                     </button>

@@ -55,9 +55,12 @@ export default function RegisterPage() {
           {message && <div className={styles.success}>{message}</div>}
 
           <div className="form-group">
-            <label className="label">E-mail</label>
+            <label htmlFor="register-email" className="label">E-mail</label>
             <input
               type="email"
+              id="register-email"
+              name="email"
+              autoComplete="email"
               className="input"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -66,9 +69,12 @@ export default function RegisterPage() {
           </div>
 
           <div className="form-group">
-            <label className="label">Heslo</label>
+            <label htmlFor="register-password" className="label">Heslo</label>
             <input
               type="password"
+              id="register-password"
+              name="password"
+              autoComplete="new-password"
               className="input"
               value={password}
               onChange={(event) => setPassword(event.target.value)}

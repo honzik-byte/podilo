@@ -353,6 +353,8 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
                 onPointerDown={() => setActiveThumb('min')}
                 className={styles.rangeInput}
                 style={{ zIndex: activeThumb === 'min' ? 5 : 3 }}
+                aria-label="Minimální cena podílu"
+                aria-valuetext={`Od ${formatCzechCurrency(minPriceValue)}`}
               />
               <input
                 type="range"
@@ -367,6 +369,8 @@ export default function ListingsFilter({ maxPriceCap }: ListingsFilterProps) {
                 onPointerDown={() => setActiveThumb('max')}
                 className={styles.rangeInput}
                 style={{ zIndex: activeThumb === 'max' ? 5 : 4 }}
+                aria-label="Maximální cena podílu"
+                aria-valuetext={`Do ${formatCzechCurrency(maxPriceValue)}`}
               />
             </div>
           </div>
