@@ -81,7 +81,7 @@ export default function AdminDashboard() {
         .from('user_roles')
         .select('role')
         .eq('user_id', session.user.id)
-        .single();
+        .maybeSingle();
 
       if (roleError || !roleData || roleData.role !== 'admin') {
         setIsAdmin(false);

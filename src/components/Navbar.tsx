@@ -13,11 +13,13 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const checkAdminRole = async (userId: string) => {
+    // Most users have no row here at all, which .single() reports as a 406 -
+    // maybeSingle() treats "no role" as the ordinary case it is.
     const { data } = await supabase
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (data && data.role === 'admin') {
       setIsAdmin(true);
