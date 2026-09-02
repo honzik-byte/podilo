@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { translateAuthError } from '@/lib/authErrors';
 import Button from '@/components/Button';
 import Link from 'next/link';
 import styles from '../auth.module.css';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,16 +22,34 @@ export default function RegisterPage() {
     setError('');
     setMessage('');
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
     });
 
     if (error) {
-      setError(error.message);
-    } else {
-      setMessage('Účet vytvořen! Pokud je vyžadováno potvrzení e-mailu vaším Supabase nastavením, zkontrolujte si schránku. Jinak se můžete přihlásit.');
+      setError(translateAuthError(error.message));
+      setLoading(false);
+      return;
     }
+
+    // Supabase hides whether an address is already taken by returning a user
+    // with no identities instead of an error, so we handle that case here.
+    if (data.user && data.user.identities?.length === 0) {
+      setError('Na tento e-mail už účet existuje. Přihlaste se, nebo si nechte poslat nové heslo.');
+    } else if (data.session) {
+      setMessage('Účet je vytvořený a rovnou přihlášený. Můžete začít.');
+      router.push('/');
+      router.refresh();
+    } else {
+      setMessage(
+        `Poslali jsme potvrzovací e-mail na ${email}. Otevřete odkaz v něm a účet se aktivuje — podívejte se i do spamu.`
+      );
+    }
+
     setLoading(false);
   };
 
