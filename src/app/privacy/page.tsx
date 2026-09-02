@@ -1,5 +1,11 @@
 import styles from '../content.module.css';
 
+export const metadata = {
+  title: 'Zásady ochrany osobních údajů | Podilo',
+  description: 'Jak na Podilo nakládáme s osobními údaji uživatelů, jaká data zpracováváme a jaká máte práva.',
+};
+
+
 export default function PrivacyPage() {
   return (
     <div className={styles.container}>

@@ -3,6 +3,12 @@ import Link from 'next/link';
 import PricingCheckout from './PricingCheckout';
 import { paymentsEnabled } from '@/lib/paymentsEnabled';
 
+export const metadata = {
+  title: 'Zvýšení viditelnosti inzerátu | Podilo',
+  description: 'Doplňkové služby pro lepší pozici inzerátu ve výpisu na Podilo. Placené zvýraznění zatím připravujeme.',
+};
+
+
 interface PricingPageProps {
   searchParams: Promise<{ listing?: string; cancelled?: string }>;
 }

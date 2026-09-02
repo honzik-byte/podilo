@@ -2,6 +2,12 @@ import styles from '../content.module.css';
 import Link from 'next/link';
 import Button from '@/components/Button';
 
+export const metadata = {
+  title: 'Co je Podilo | Podilo',
+  description: 'Podilo je specializované tržiště pro spoluvlastnické podíly nemovitostí v ČR. Bez provize, bez makléře, přímý kontakt mezi prodávajícím a zájemcem.',
+};
+
+
 export default function AboutPage() {
   return (
     <div className={styles.container}>

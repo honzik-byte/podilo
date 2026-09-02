@@ -1,6 +1,12 @@
 import styles from '../content.module.css';
 import Link from 'next/link';
 
+export const metadata = {
+  title: 'Jak Podilo funguje | Podilo',
+  description: 'Čtyři kroky od zveřejnění nabídky po kontakt se zájemcem. Jak na Podilo probíhá inzerce spoluvlastnických podílů nemovitostí.',
+};
+
+
 export default function HowItWorksPage() {
   return (
     <div className={styles.container}>

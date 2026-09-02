@@ -2,6 +2,12 @@ import styles from './page.module.css';
 import ListingsClientView from './ListingsClientView';
 import { getAllListings } from '@/lib/listingQueries';
 
+export const metadata = {
+  title: 'Nabídky spoluvlastnických podílů nemovitostí | Podilo',
+  description: 'Aktuální nabídky podílů na bytech, domech, pozemcích i komerčních objektech. Filtrujte podle lokality, ceny, velikosti podílu a obsazenosti.',
+};
+
+
 export const revalidate = 0;
 
 interface PageProps {
