@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import { getOrCreateFavoritesVisitorId, readFavorites, toggleFavorite } from '@/lib/favorites';
 import styles from './FavoriteButton.module.css';
 
@@ -10,7 +12,9 @@ interface FavoriteButtonProps {
 }
 
 export default function FavoriteButton({ listingId, variant = 'overlay' }: FavoriteButtonProps) {
+  const router = useRouter();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const sync = () => {
@@ -21,15 +25,32 @@ export default function FavoriteButton({ listingId, variant = 'overlay' }: Favor
     window.addEventListener('storage', sync);
     window.addEventListener('podilo-favorites-updated', sync as EventListener);
 
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(Boolean(session));
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(Boolean(session));
+    });
+
     return () => {
       window.removeEventListener('storage', sync);
       window.removeEventListener('podilo-favorites-updated', sync as EventListener);
+      subscription.unsubscribe();
     };
   }, [listingId]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
+
+    if (!isLoggedIn) {
+      router.push('/login');
+      return;
+    }
+
     const wasFavorite = readFavorites().includes(listingId);
     const nextFavorites = toggleFavorite(listingId);
     setIsFavorite(nextFavorites.includes(listingId));
