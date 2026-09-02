@@ -4,6 +4,7 @@ import styles from './page.module.css';
 export const metadata = {
   title: 'Investor Pro - Podilo',
   description: 'Investor Pro na Podilo připravujeme. Chystáme nástroje pro aktivní kupující a investory do spoluvlastnických podílů.',
+  alternates: { canonical: '/premium' },
 };
 
 const features = [

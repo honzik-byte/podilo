@@ -4,6 +4,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Časté dotazy o podílech nemovitostí | Podilo',
   description: 'Odpovědi na nejčastější otázky o prodeji a koupi spoluvlastnických podílů: jak inzerce funguje, co ověřujeme a jak probíhá kontakt s prodávajícím.',
+  alternates: { canonical: '/faq' },
 };
 
 

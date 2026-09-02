@@ -16,4 +16,22 @@ const nextConfig: NextConfig = {
   },
 };
 
+// Deliberately no Content-Security-Policy here: the app pulls from Supabase,
+// Stripe and OpenStreetMap tiles, so a CSP needs to be written and tested
+// against those origins rather than guessed at.
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), payment=(), interest-cohort=()' },
+  { key: 'X-DNS-Prefetch-Control', value: 'on' },
+];
+
+nextConfig.headers = async () => [
+  {
+    source: '/:path*',
+    headers: securityHeaders,
+  },
+];
+
 export default nextConfig;

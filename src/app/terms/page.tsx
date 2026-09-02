@@ -3,6 +3,7 @@ import styles from '../content.module.css';
 export const metadata = {
   title: 'Obchodní podmínky | Podilo',
   description: 'Podmínky používání inzertní platformy Podilo pro prodávající i zájemce o spoluvlastnické podíly nemovitostí.',
+  alternates: { canonical: '/terms' },
 };
 
 

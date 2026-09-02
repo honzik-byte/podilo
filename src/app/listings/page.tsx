@@ -5,6 +5,7 @@ import { getAllListings } from '@/lib/listingQueries';
 export const metadata = {
   title: 'Nabídky spoluvlastnických podílů nemovitostí | Podilo',
   description: 'Aktuální nabídky podílů na bytech, domech, pozemcích i komerčních objektech. Filtrujte podle lokality, ceny, velikosti podílu a obsazenosti.',
+  alternates: { canonical: '/listings' },
 };
 
 

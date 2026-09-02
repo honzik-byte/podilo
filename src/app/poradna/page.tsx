@@ -6,6 +6,7 @@ import styles from './page.module.css';
 export const metadata = {
   title: 'Poradna o spoluvlastnických podílech | Podilo',
   description: 'Praktické články o prodeji, koupi a investování do spoluvlastnických podílů nemovitostí. Vysvětlení trhu, cen i právního kontextu.',
+  alternates: { canonical: '/poradna' },
 };
 
 export default async function ContentHubPage() {

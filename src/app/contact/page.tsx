@@ -3,6 +3,7 @@ import styles from '../content.module.css';
 export const metadata = {
   title: 'Kontakt a podpora | Podilo',
   description: 'Máte dotaz k inzerátu, účtu nebo fungování Podilo? Napište nám, ozveme se zpět.',
+  alternates: { canonical: '/contact' },
 };
 
 
