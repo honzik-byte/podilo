@@ -350,6 +350,33 @@
   color: #27272a;
 }
 
+/* A tick against a bullet is too faint a difference to catch while
+   scanning - unmet items are muted so the gap reads at a glance. */
+.qualityItem[data-done='true'] > span:first-child {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.qualityItem[data-done='false'] {
+  color: var(--muted-text);
+}
+
+.qualityItem[data-done='false'] > span:first-child {
+  color: var(--border);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .phoneBox {
   margin-bottom: 1.25rem;
   padding: 1.1rem;
@@ -432,8 +459,37 @@
     gap: 0.85rem;
   }
 
+  /* Ten one-per-row cards for values as short as "1/2" or "7" cost about a
+     thousand pixels of scrolling. On a phone this reads as a spec sheet
+     instead: label left, value right, hairline between. */
   .infoGrid {
     grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .infoItem {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .infoItem:last-child {
+    border-bottom: 0;
+  }
+
+  .infoItem .label {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .infoItem .value {
+    text-align: right;
   }
 
   .relatedGrid {

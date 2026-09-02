@@ -418,9 +418,12 @@ export default function ListingDetailClient({ listing, relatedListings }: Listin
             </div>
             <div className={styles.qualityList}>
               {quality.checks.map((item) => (
-                <div key={item.label} className={styles.qualityItem}>
-                  <span>{item.done ? '✓' : '•'}</span>
-                  <span>{item.label}</span>
+                <div key={item.label} className={styles.qualityItem} data-done={item.done}>
+                  <span aria-hidden="true">{item.done ? '✓' : '○'}</span>
+                  <span>
+                    {item.label}
+                    <span className={styles.srOnly}>{item.done ? ' — splněno' : ' — chybí'}</span>
+                  </span>
                 </div>
               ))}
             </div>
