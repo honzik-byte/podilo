@@ -427,8 +427,37 @@
     grid-template-columns: 1fr;
   }
 
+  /* Rozpustíme oba sloupce, aby šly karty přeskládat:
+     galerie → cena → kontakt → detaily → doplňkové karty */
+  .mainColumn,
   .sidebar {
-    position: static;
+    display: contents;
+  }
+
+  /* Vše, co níže nedostane vlastní pořadí, zůstává na konci. */
+  .mainColumn > *,
+  .sidebar > * {
+    order: 6;
+  }
+
+  .heroCard {
+    order: 1;
+  }
+
+  .priceCard {
+    order: 2;
+  }
+
+  .contactCard {
+    order: 3;
+  }
+
+  .section {
+    order: 4;
+  }
+
+  .metaCard {
+    order: 5;
   }
 }
 
@@ -441,8 +470,7 @@
     padding: 1.25rem 0 0.85rem;
   }
 
-  .mainColumn,
-  .sidebar {
+  .layout {
     gap: 1rem;
   }
 
