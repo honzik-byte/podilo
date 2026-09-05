@@ -3,42 +3,59 @@
   --footer-muted: rgba(250, 247, 240, 0.66);
   --footer-rule: rgba(201, 161, 90, 0.22);
 
-  margin-top: 5rem;
-  padding: 4.5rem 0 2.25rem;
+  margin-top: 3rem;
+  padding: 3.5rem 0 2rem;
   background: var(--foreground);
   color: var(--footer-ink);
 }
 
 .content {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.75rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 1.5rem;
+  margin-bottom: 2.25rem;
 }
 
 @media (min-width: 600px) {
   .content {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem 3rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem 2rem;
   }
 }
 
 @media (min-width: 960px) {
+  .footer {
+    margin-top: 5rem;
+    padding: 4.5rem 0 2.25rem;
+  }
+
   .content {
     grid-template-columns: 1.5fr 1fr 1fr 1fr;
     gap: 3rem;
+    margin-bottom: 3rem;
   }
 }
 
 /* Brand */
 
+.accountColumn {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .accountColumn {
+    display: block;
+  }
+}
+
 .brandColumn {
+  grid-column: 1 / -1;
   max-width: 30rem;
 }
 
-@media (min-width: 600px) and (max-width: 959px) {
+@media (min-width: 960px) {
   .brandColumn {
-    grid-column: 1 / -1;
+    grid-column: auto;
   }
 }
 
@@ -127,17 +144,39 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 0.4rem 2rem;
+  align-items: baseline;
+  gap: 0.6rem 2rem;
   margin-top: 2rem;
   color: var(--footer-muted);
   font-size: 0.82rem;
+}
+
+.metaLeft {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1.25rem;
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.85rem;
+}
+
+.legalLink + .legalLink::before {
+  content: '·';
+  margin-right: 0.85rem;
+  color: rgba(250, 247, 240, 0.35);
 }
 
 .credit {
   white-space: nowrap;
 }
 
-.creditLink {
+.creditLink,
+.legalLink {
   color: var(--footer-ink);
   text-decoration: underline;
   text-decoration-color: rgba(250, 247, 240, 0.3);
@@ -145,12 +184,14 @@
   transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
-.creditLink:hover {
+.creditLink:hover,
+.legalLink:hover {
   color: var(--brass);
   text-decoration-color: var(--brass);
 }
 
-.creditLink:focus-visible {
+.creditLink:focus-visible,
+.legalLink:focus-visible {
   outline: 2px solid var(--brass);
   outline-offset: 3px;
   border-radius: 2px;

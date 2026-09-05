@@ -33,13 +33,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className={styles.accountColumn}>
             <div className={styles.title}>Uživatel</div>
             <ul className={styles.linkList}>
               <li><Link href="/saved" className={styles.link}>Uložené nabídky</Link></li>
               <li><Link href="/my-listings" className={styles.link}>Moje inzeráty</Link></li>
-              <li><Link href="/terms" className={styles.link}>Obchodní podmínky</Link></li>
-              <li><Link href="/privacy" className={styles.link}>Ochrana osobních údajů</Link></li>
             </ul>
           </div>
         </div>
@@ -52,7 +50,13 @@ export default function Footer() {
             inzerenty a platforma Podilo jejich správnost ani právní stav nemovitostí neověřuje.
           </p>
           <div className={styles.meta}>
-            <span>&copy; {new Date().getFullYear()} Podilo.cz. Všechna práva vyhrazena.</span>
+            <span className={styles.metaLeft}>
+              <span>&copy; {new Date().getFullYear()} Podilo.cz. Všechna práva vyhrazena.</span>
+              <span className={styles.legal}>
+                <Link href="/terms" className={styles.legalLink}>Obchodní podmínky</Link>
+                <Link href="/privacy" className={styles.legalLink}>Ochrana osobních údajů</Link>
+              </span>
+            </span>
             <span className={styles.credit}>
               Vytvořila{' '}
               <a
